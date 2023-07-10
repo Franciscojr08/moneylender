@@ -1,0 +1,23 @@
+{
+  "name": "portal/qualidade",
+  "description": "Portal da Qualidade",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Francisco Santos",
+      "email": "franciscojuniordh@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "MoneyLender\\Src\\": "src/",
+      "MoneyLender\\Core\\": "core/"
+    }
+  },
+  "require": {
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "tecnickcom/tcpdf": "6.6.2"
+  }
+}

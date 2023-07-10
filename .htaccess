@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+Options -Indexes
+
+RewriteRule ^([a-z-]*)$ index.php?modulo=$1 [QSA,L]
+RewriteRule ^([a-z-]*)/([a-zA-Z0-9]+)?$ index.php?modulo=$1&acao=$2 [QSA,L]
+RewriteRule ^([a-z-]*)/([a-zA-Z0-9]*)/([a-zA-Z0-9_]+)?$ index.php?modulo=$1&acao=$2&valor=$3 [QSA,L]
+</IfModule>
