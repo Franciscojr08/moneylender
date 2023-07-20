@@ -2,7 +2,7 @@
 
 namespace MoneyLender\Src\Emprestimo;
 
-use MoneyLender\Src\Cliente\Cliente;
+use MoneyLender\Src\Pessoa\Pessoa;
 
 /**
  * Interface EmprestimoDAOInterface
@@ -37,12 +37,12 @@ interface EmprestimoDAOInterface {
 	/**
 	 * Consulta os emprestimos do cliente
 	 *
-	 * @param Cliente $oCliente
-	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @param Pessoa $oPessoa
 	 * @return EmprestimoList
 	 * @throws \Exception
 	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findByCliente(Cliente $oCliente): EmprestimoList;
+	public function findByPessoa(Pessoa $oPessoa): EmprestimoList;
 }

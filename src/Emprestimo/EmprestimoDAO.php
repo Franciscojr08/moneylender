@@ -2,8 +2,8 @@
 
 namespace MoneyLender\Src\Emprestimo;
 
-use MoneyLender\Src\Cliente\Cliente;
 use MoneyLender\Src\Parcela\Parcela;
+use MoneyLender\Src\Pessoa\Pessoa;
 use MoneyLender\Src\Sistema\Sistema;
 
 class EmprestimoDAO implements EmprestimoDAOInterface {
@@ -63,22 +63,22 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	/**
 	 * Consulta os emprestimos do cliente
 	 *
-	 * @param Cliente $oCliente
-	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @param Pessoa $oPessoa
 	 * @return EmprestimoList
 	 * @throws \Exception
 	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findByCliente(Cliente $oCliente): EmprestimoList {
+	public function findByPessoa(Pessoa $oPessoa): EmprestimoList {
 		$sSql = "SELECT
 					emo.*
 				FROM
 					emo_emprestimo emo
 				WHERE
-					emo.cle_id = ?";
+					emo.psa_id = ?";
 
-		$aParam[] = $oCliente->getId();
+		$aParam[] = $oPessoa->getId();
 
 		try {
 			$aaEmprestimos = Sistema::connection()->getArray($sSql,$aParam);

@@ -2,8 +2,8 @@
 
 namespace MoneyLender\Src\Sistema;
 
-use MoneyLender\Src\Cliente\ClienteDAO;
-use MoneyLender\Src\Cliente\ClienteDAOInterface;
+use MoneyLender\Src\Pessoa\PessoaDAO;
+use MoneyLender\Src\Pessoa\PessoaDAOInterface;
 use MoneyLender\Src\Emprestimo\EmprestimoDAO;
 use MoneyLender\Src\Emprestimo\EmprestimoDAOInterface;
 use MoneyLender\Src\Parcela\ParcelaDAO;
@@ -54,7 +54,7 @@ class Sistema {
 		return new ParcelaDAO();
 	}
 
-	public static function ClienteDAO(): ClienteDAOInterface {
-		return new ClienteDAO();
+	public static function PessoaDAO(): PessoaDAOInterface {
+		return new PessoaDAO();
 	}
 }

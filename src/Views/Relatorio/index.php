@@ -1,0 +1,141 @@
+<?php
+
+use MoneyLender\Core\Functions;
+use MoneyLender\Src\Pessoa\Pessoa;
+use MoneyLender\Src\Pessoa\PessoaList;
+use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
+
+/**
+ * @var PessoaList $loPessoaList
+ * @var Pessoa $oPessoa
+ */
+
+?>
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<title>Controle de Empréstimos</title>
+	<?php
+	Functions::addFavicon();
+	Functions::addStyleSheet(["css/style.css"]);
+	?>
+</head>
+<body>
+<?php Functions::renderMenu(); ?>
+
+<div class="content_cad_emprestimo">
+	<div class="cad_emp_info">
+		<h3>Relatórios</h3>
+		<p class="mb-4">Selecione o tipo de relatório que deseja gerar.</p>
+
+		<h6>Modelo de relatório</h6>
+		<input type="radio" checked data-target="filtro_recibo" id="recibo" name="rel_tipo" class="rel_tipo">
+		<label for="recibo" style="color: #fff; margin-bottom: 8px">2ª Via recibo</label><br>
+
+		<input type="radio" data-target="not_filtro" id="fornecido" name="rel_tipo" class="rel_tipo">
+		<label for="fornecido" style="color: #fff; margin-bottom: 8px">Fornecido</label><br>
+
+		<input type="radio" data-target="not_filtro" id="recebido" name="rel_tipo" class="rel_tipo">
+		<label for="recebido" style="color: #fff; margin-bottom: 8px">Recebido</label><br>
+
+		<input type="radio" data-target="filtro_emprestimo"  id="emprestimos" name="rel_tipo" class="rel_tipo">
+		<label for="emprestimos" style="color: #fff; margin-bottom: 8px">Empréstimos</label><br>
+
+		<input type="radio" data-target="filtro_clientes" id="clientes" name="rel_tipo" class="rel_tipo">
+		<label for="clientes" style="color: #fff; margin-bottom: 8px">Clientes</label><br>
+
+		<input type="radio" data-target="filtro_fornecedores" id="fornecedores" name="rel_tipo" class="rel_tipo">
+		<label for="fornecedores" style="color: #fff;">Fornecedores</label><br>
+
+	</div>
+
+	<div class="cad_emp_data">
+		<h3 style="">Filtros do relatório</h3>
+		<p class="mb-4">Preencha os campos caso possua e deseje filtrar.</p>
+
+		<form>
+			<div id="filtro_recibo" class="div_filtro">
+				<?php require_once "Relatorio/include/filtro_recibo.php"; ?>
+			</div>
+
+			<div id="filtro_emprestimo" style="display:none;" class="div_filtro">
+				<?php require_once "Relatorio/include/filtro_emprestimo.php"; ?>
+			</div>
+
+			<div id="filtro_clientes" style="display:none;" class="div_filtro">
+				<div>
+					<label>Cliente</label><br>
+					<select style="width: 100%;" id="cliente" class="select_emp_data" name="cliente_id">
+						<option selected style="display: none;" value="">Selecione o Cliente</option>
+						<?php
+						foreach ($loPessoaList as $oPessoa) {
+							if ($oPessoa->isFornecedor()) {
+								continue;
+							}
+							?>
+							<option value="<?php echo $oPessoa->getId(); ?>"><?php echo $oPessoa->getNome(); ?></option>
+						<?php } ?>
+					</select>
+				</div>
+
+				<div style="padding-bottom: 16rem;">
+					<span style="font-size: 11.5px; color: #ff0000; font-weight: 500;">Este filtro não é obrigatório, caso deseje filtrar por um cliente, selecione o mesmo no filtro acima.</span>
+				</div>
+			</div>
+
+			<div id="filtro_fornecedores" style="display:none;" class="div_filtro">
+				<div>
+					<label>Fornecedor</label><br>
+					<select style="width: 100%;" id="fornecedor" name="fornecedor_id" class="select_emp_data" required>
+						<option selected style="display: none;" value="">Selecione o Fornecedor</option>
+						<?php
+						foreach ($loPessoaList as $oPessoa) {
+							if ($oPessoa->isCliente()) {
+								continue;
+							}
+							?>
+							<option value="<?php echo $oPessoa->getId(); ?>"><?php echo $oPessoa->getNome(); ?></option>
+						<?php } ?>
+					</select>
+				</div>
+
+				<div style="padding-bottom: 16rem;">
+					<span style="font-size: 11.5px; color: #ff0000; font-weight: 500;">Este filtro não é obrigatório, caso deseje filtrar por um fornecedor, selecione o mesmo no filtro acima.</span>
+				</div>
+			</div>
+
+			<div id="not_filtro" style="display: none" class="div_filtro">
+				<?php Functions::addImage("not_img","png",""); ?>
+				<br>
+				<span>Este modelo de relatório não possui filtros disponíveis.</span>
+			</div>
+			
+			<div style="display: flex; justify-content: center" class="btn_cad_emp">
+				<button>Gerar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<?php Functions::renderFooter(); ?>
+<?php Functions::addScript(["js/Relatorio/relatorio.js", "js/Sistema/sistema.js"]); ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+		$('#emo_valor').maskMoney({
+			prefix: "R$ ",
+			decimal: ",",
+			thousands: "."
+		});
+	});
+</script>
+
+</body>
+</html>

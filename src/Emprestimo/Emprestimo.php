@@ -2,9 +2,9 @@
 
 namespace MoneyLender\Src\Emprestimo;
 
-use MoneyLender\Src\Cliente\Cliente;
 use MoneyLender\Src\Pagamento\PagamentoList;
 use MoneyLender\Src\Parcela\ParcelaList;
+use MoneyLender\Src\Pessoa\Pessoa;
 use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 use MoneyLender\Src\Sistema\Enum\SituacaoEmprestimoEnum;
 use MoneyLender\Src\Sistema\Sistema;
@@ -26,9 +26,10 @@ class Emprestimo {
 	private \DateTimeImmutable $oDataPagamentoEmprestimo;
 	private \DateTimeImmutable $oDataPrevisaoPagamento;
 	private int $iSituacao;
-	private Cliente $oCliente;
+	private Pessoa $oPessoa;
 	private ParcelaList $loParcelas;
 	private PagamentoList $loPagamentos;
+	private \DateTimeImmutable $oDataAtualizacao;
 
 	/**
 	 * Cria um objeto de parcela a partir de um array
@@ -43,10 +44,10 @@ class Emprestimo {
 	public static function createFromArray(mixed $aDados): Emprestimo {
 		$oEmprestimo = new Emprestimo();
 		$oEmprestimo->iId = $aDados['emo_id'];
+		$oEmprestimo->oPessoa = Sistema::PessoaDAO()->find($aDados['psa_id']);
 		$oEmprestimo->fValor = doubleval($aDados['emo_valor']);
 		$oEmprestimo->oDataEmprestimo = new \DateTimeImmutable($aDados['emo_data_emprestimo']);
 		$oEmprestimo->iSituacao = $aDados['emo_situacao'];
-		$oEmprestimo->oCliente = Sistema::ClienteDAO()->find($aDados['cle_id']);
 
 		if (!empty($aDados['emo_valor_pago'])) {
 			$oEmprestimo->fValorPago = doubleval($aDados['emo_valor_pago']);
@@ -70,6 +71,10 @@ class Emprestimo {
 
 		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::NAO && !empty($aDados['emo_data_previsao_pagamento'])) {
 			$oEmprestimo->oDataPrevisaoPagamento = $aDados['emo_data_previsao_pagamento'];
+		}
+
+		if (!empty($aDados['emo_data_atualizacao'])) {
+			$oEmprestimo->oDataAtualizacao = new \DateTimeImmutable($aDados['emo_data_atualizacao']);
 		}
 
 		$loParcelas = Sistema::ParcelaDAO()->findByEmprestimo($oEmprestimo);
@@ -358,26 +363,26 @@ class Emprestimo {
 	/**
 	 * Retorna o cliente
 	 *
-	 * @author Francisco Santos franciscojuniordh@gmail.com
-	 * @return Cliente
+	 * @return Pessoa
 	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getCliente(): Cliente {
-		return $this->oCliente;
+	public function getPessoa(): Pessoa {
+		return $this->oPessoa;
 	}
 
 	/**
 	 * Atribui o client
 	 *
-	 * @param Cliente $oCliente
-	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @param Pessoa $oPessoa
 	 * @return void
 	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function setCliente(Cliente $oCliente): void {
-		$this->oCliente = $oCliente;
+	public function setPessoa(Pessoa $oPessoa): void {
+		$this->oPessoa = $oPessoa;
 	}
 
 	/**
@@ -472,6 +477,43 @@ class Emprestimo {
 		}
 
 		return ($this->fValor + ($this->fValor * ($this->fTaxaJuros / 100)));
+	}
+
+	/**
+	 * Retorna a data de atualização
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return \DateTimeImmutable
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getDataAtualizacao(): \DateTimeImmutable {
+		return $this->oDataAtualizacao;
+	}
+
+	/**
+	 * Retorna se possui atualização
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasAtualizacao(): bool {
+		return !empty($this->oDataAtualizacao);
+	}
+
+	/**
+	 * Atribui a data de atualização
+	 *
+	 * @param \DateTimeImmutable $oDataAtualizacao
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function setDataAtualizacao(\DateTimeImmutable $oDataAtualizacao): void {
+		$this->oDataAtualizacao = $oDataAtualizacao;
 	}
 
 }

@@ -64,7 +64,7 @@ class Router {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	private function attrValues(): void {
-		$_GET['modulo'] = filter_input(INPUT_GET,"modulo",FILTER_SANITIZE_URL) ?? "home";
+		$_GET['modulo'] = filter_input(INPUT_GET,"modulo",FILTER_SANITIZE_URL) ?? "gestao";
 		$_GET['acao'] = filter_input(INPUT_GET,"acao",FILTER_SANITIZE_URL) ?? "index";
 		$_GET['valor'] = filter_input(INPUT_GET,'valor',FILTER_SANITIZE_URL) ?? null;
 
