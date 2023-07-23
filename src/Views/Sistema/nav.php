@@ -26,3 +26,10 @@ use MoneyLender\Core\Functions;
 		<li><a href="../relatorio"><i class="fa-solid fa-chart-simple fa-sm" style="margin-right: 5px"></i>Relatório</a></li>
 	</ul>
 </nav>
+
+<div class="toggle_spinner">
+	<div class="spinner_moneylender">
+		<div class="spinner-border" role="status"></div>
+		Aguarde...
+	</div>
+</div>

@@ -1,4 +1,12 @@
 $(document).ready(function() {
+	$(document).ajaxStart(function() {
+		$(".toggle_spinner").show();
+	});
+
+	$(document).ajaxStop(function() {
+		$(".toggle_spinner").hide();
+	});
+
 	carregarEmprestimos();
 })
 

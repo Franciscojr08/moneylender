@@ -200,7 +200,7 @@ class Emprestimo {
 	/**
 	 * Retorna se o empréstimo possui taxa de juros
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return bool
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

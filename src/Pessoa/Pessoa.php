@@ -19,13 +19,13 @@ class Pessoa {
 
 	private int $iId;
 	private string $sNome;
-	private int $iCPF;
+	private string $sCPF;
 	private string $sLogradouro;
 	private string $sBairro;
 	private string $sCidade;
 	private string $sEstado;
 	private string $sComplemento;
-	private int $iTelefone;
+	private string $sTelefone;
 	private string $sEmail;
 	private bool $bIndicado = false;
 	private string $sNomeIndicador;
@@ -52,7 +52,7 @@ class Pessoa {
 		$oPessoa->iTipo = $aDados['psa_tipo'];
 
 		if (!empty($aDados['psa_cpf'])) {
-			$oPessoa->iCPF = $aDados['psa_cpf'];
+			$oPessoa->sCPF = $aDados['psa_cpf'];
 		}
 
 		if (!empty($aDados['psa_logradouro'])) {
@@ -76,7 +76,7 @@ class Pessoa {
 		}
 
 		if (!empty($aDados['psa_telefone'])) {
-			$oPessoa->iTelefone = $aDados['psa_telefone'];
+			$oPessoa->sTelefone = $aDados['psa_telefone'];
 		}
 
 		if (!empty($aDados['psa_email'])) {
@@ -157,25 +157,52 @@ class Pessoa {
 	 * Retorna o CPF
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
-	 * @return int
+	 * @return string
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getCPF(): int {
-		return $this->iCPF;
+	public function getCPF(): string {
+		return $this->sCPF;
+	}
+
+	/**
+	 * Retorna o CPF com a máscara
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return string
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getCPFComMascara(): string {
+		return substr($this->sCPF, 0, 3) .
+			'.' . substr($this->sCPF, 3, 3) .
+			'.' . substr($this->sCPF, 6, 3) .
+			'-' . substr($this->sCPF, 9, 2);
+	}
+
+	/**
+	 * Retorna se a pessoa possui CPF
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasCPF(): bool {
+		return !empty($this->sCPF);
 	}
 
 	/**
 	 * Atribui o CPF
 	 *
-	 * @param int $iCPF
+	 * @param string $sCPF
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function setCPF(int $iCPF): void {
-		$this->iCPF = $iCPF;
+	public function setCPF(string $sCPF): void {
+		$this->sCPF = $sCPF;
 	}
 
 	/**
@@ -188,6 +215,18 @@ class Pessoa {
 	 */
 	public function getLogradouro(): string {
 		return $this->sLogradouro;
+	}
+
+	/**
+	 * Retorna se possui logradouro
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasLogradouro(): bool {
+		return !empty($this->sLogradouro);
 	}
 
 	/**
@@ -216,6 +255,18 @@ class Pessoa {
 	}
 
 	/**
+	 * Retorna se possui bairro
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasBairro(): bool {
+		return !empty($this->sBairro);
+	}
+
+	/**
 	 * Atribui o bairro
 	 *
 	 * @param string $sBairro
@@ -238,6 +289,18 @@ class Pessoa {
 	 */
 	public function getCidade(): string {
 		return $this->sCidade;
+	}
+
+	/**
+	 * Retorna se possui cidade
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasCidade(): bool {
+		return !empty($this->sCidade);
 	}
 
 	/**
@@ -266,6 +329,18 @@ class Pessoa {
 	}
 
 	/**
+	 * Retorna se possui estado
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasEstado(): bool {
+		return !empty($this->sEstado);
+	}
+
+	/**
 	 * Atribui o estado
 	 *
 	 * @param string $sEstado
@@ -291,6 +366,18 @@ class Pessoa {
 	}
 
 	/**
+	 * Retorna se possui complemento
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasComplemento(): bool {
+		return !empty($this->sComplemento);
+	}
+
+	/**
 	 * Atribui o complemento
 	 *
 	 * @param string $sComplemento
@@ -312,20 +399,46 @@ class Pessoa {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getTelefone(): int {
-		return $this->iTelefone;
+		return $this->sTelefone;
+	}
+
+	/**
+	 * Retorna o telefone com máscara
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return string
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getTelefoneComMascara(): string {
+		return '(' . substr($this->sTelefone, 0, 2) . ') '
+			. substr($this->sTelefone, 2, 5) .
+			'-' . substr($this->sTelefone, 7, 4);
+	}
+
+	/**
+	 * Retorna se possui telefone
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasTelefone(): bool {
+		return !empty($this->sTelefone);
 	}
 
 	/**
 	 * Atribui o telefone
 	 *
-	 * @param int $iTelefone
+	 * @param string $sTelefone
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function setTelefone(int $iTelefone): void {
-		$this->iTelefone = $iTelefone;
+	public function setTelefone(string $sTelefone): void {
+		$this->sTelefone = $sTelefone;
 	}
 
 	/**
@@ -338,6 +451,18 @@ class Pessoa {
 	 */
 	public function getEmail(): string {
 		return $this->sEmail;
+	}
+
+	/**
+	 * Retorna se possui e-mail
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasEmail(): bool {
+		return !empty($this->sEmail);
 	}
 
 	/**
@@ -424,7 +549,7 @@ class Pessoa {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function hasEmprestimos(): bool {
-		return !$this->loEmprestimoList->isEmpty();
+		return !empty($this->loEmprestimoList);
 	}
 
 	/**
@@ -443,7 +568,7 @@ class Pessoa {
 	/**
 	 * Retorna o tipo de pessoa
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return int
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -453,10 +578,26 @@ class Pessoa {
 	}
 
 	/**
+	 * Retorna a descrição do tipo de pessoa
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return string
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getDescricaoTipoPessoa(): string {
+		if ($this->iTipo == self::CLIENTE) {
+			return "Cliente";
+		} else {
+			return "Fornecedor";
+		}
+	}
+
+	/**
 	 * Atribui o tipo de pessoa
 	 *
 	 * @param int $iTipo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -468,7 +609,7 @@ class Pessoa {
 	/**
 	 * Retorna se a pessoa é cliente
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return bool
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -480,7 +621,7 @@ class Pessoa {
 	/**
 	 * Retorna se a pessoa é um fornecedor
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return bool
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -551,4 +692,46 @@ class Pessoa {
 		$this->oDataAtualizacao = $oDataAtualizacao;
 	}
 
+	/**
+	 * Cadastra uma pessoa
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function cadastrar(): bool {
+		$this->oDataCadastro = new \DateTimeImmutable("now");
+
+		return Sistema::PessoaDAO()->save($this);
+	}
+
+	/**
+	 * Atualiza uma pessoa
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function atualizar(): bool {
+		$this->oDataAtualizacao = new \DateTimeImmutable("now");
+
+		return Sistema::PessoaDAO()->update($this);
+	}
+
+	/**
+	 * Deleta uma pessoa
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluir(): bool {
+		return Sistema::PessoaDAO()->delete($this);
+	}
 }

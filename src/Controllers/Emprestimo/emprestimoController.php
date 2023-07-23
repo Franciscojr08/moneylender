@@ -15,7 +15,7 @@ class emprestimoController {
 	 * Renderiza a view de cadastro do empréstimo
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 * @throws \Exception
 	 *

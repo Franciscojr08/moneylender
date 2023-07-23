@@ -10,6 +10,36 @@ namespace MoneyLender\Src\Sistema\Connection;
 interface ConnectionInterface {
 
 	/**
+	 * Inicia uma transação
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function begin(): void;
+
+	/**
+	 * Confirma uma transação
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function commit(): void;
+
+	/**
+	 * Desfaz uma transação
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function rollBack(): void;
+
+	/**
 	 * Executa uma query sql
 	 *
 	 * @param string $sSql

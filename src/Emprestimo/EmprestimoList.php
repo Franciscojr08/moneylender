@@ -172,7 +172,7 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor total recebido dos juros
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -201,7 +201,7 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor do juros a receber
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -232,5 +232,43 @@ class EmprestimoList extends \SplObjectStorage {
 		}
 
 		return $fValorJurosAReceber;
+	}
+
+	/**
+	 * Retorna se possui empréstimo em aberto
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasEmAberto(): bool {
+		/** @var Emprestimo $oEmprestimo */
+		foreach ($this as $oEmprestimo) {
+			if ($oEmprestimo->getSituacaoId() == SituacaoEmprestimoEnum::EM_ABERTO) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Retorna se os empréstimos foram quitados
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function isEmprestimosQuitados(): bool {
+		/** @var Emprestimo $oEmprestimo */
+		foreach ($this as $oEmprestimo) {
+			if ($oEmprestimo->getSituacaoId() !== SituacaoEmprestimoEnum::PAGO) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

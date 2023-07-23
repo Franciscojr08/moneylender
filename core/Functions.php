@@ -2,6 +2,8 @@
 
 namespace MoneyLender\Core;
 
+use Exception;
+
 /**
  * Class Functions
  * @package MoneyLender\Core
@@ -115,4 +117,27 @@ class Functions {
 		echo "<a href=\"$sLink\"><img src='../public/assets/img/$sNomeImagem.$sFormato?$sTimeStamp'  alt='$sAlt'></a>";
 	}
 
+	/**
+	 * Renderiza a mensagem da sessão
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function renderMensagem(): void {
+		if (Session::hasMensagem()) {
+			try {
+				echo Session::getMensagem();
+				Session::removerMensagem();
+			} catch (Exception $oExp) {
+				$eDiv = "<div class=\"bg-danger text-white mensagem_session\">";
+				$eDiv .= "<p style=\"margin-bottom: 0\">" . $oExp->getMessage() . "</p>";
+				$eDiv .= "</div>";
+
+				echo $eDiv;
+				Session::removerMensagem();
+			}
+		}
+	}
 }

@@ -1,6 +1,7 @@
 <?php
 
 use MoneyLender\Core\Functions;
+use MoneyLender\Core\Session;
 
 ?>
 
@@ -25,13 +26,15 @@ use MoneyLender\Core\Functions;
 		<h3>Clientes</h3>
 	</div>
 
-	<div class="div_cad_pessoa">
-		<span>Cadastrar <i class="fa-solid fa-user-plus" id="cadastrar_cliente" style="margin-left: 5px"></i></span>
+	<div class="div_cad_pessoa" style="display: block!important;">
+		<?php Functions::renderMensagem(); ?>
+
+		<span style="float: right" data-bs-toggle="modal" data-bs-target="#exampleModal">Cadastrar <i class="fa-solid fa-user-plus" style="margin-left: 5px"></i></span>
 	</div>
-	<table class="table table-striped tabela_pessoa">
+	<table class="table table-striped tabela_pessoa" style="margin-top: 2.3rem">
 		<thead>
 		<tr class="table-dark">
-			<th scope="col">Identificador</th>
+			<th scope="col">Cód</th>
 			<th scope="col">Nome</th>
 			<th scope="col">CPF</th>
 			<th scope="col">E-mail</th>
@@ -47,9 +50,25 @@ use MoneyLender\Core\Functions;
 		<tbody>
 		</tbody>
 	</table>
+
+	<form type="POST" action="../../pessoa/cadastrarPessoa">
+		<input type="hidden" class="psa_tipo" name="aPessoa[psa_tipo]" value="1">
+		<?php
+			$sDescricaoTipoPessoa = "Cliente";
+			require_once "Pessoa/include/cadastrar.php";
+		?>
+	</form>
 </div>
 
-<?php Functions::renderFooter(); ?>
-<?php Functions::addScript(["js/Pessoa/pessoa.js", "js/Sistema/sistema.js"]); ?>
+<div class="modal fade" id="modalEditarPessoa"></div>
+<div class="modal fade" id="modalExcluirPessoa"></div>
+
+<?php
+	Functions::renderFooter();
+	Functions::addScript(["js/Pessoa/pessoa.js", "js/Sistema/sistema.js"]);
+
+	require_once "Pessoa/include/validarCPF.php";
+?>
+
 </body>
 </html>

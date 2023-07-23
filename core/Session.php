@@ -10,6 +10,18 @@ namespace MoneyLender\Core;
 class Session {
 
 	/**
+	 * Session Construtor
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function __construct() {
+		self::iniciar();
+	}
+
+	/**
 	 * Verifica se a sessão foi iniciada, se não foi é iniciada uma sessão
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
@@ -21,5 +33,78 @@ class Session {
 		if (session_status() !== PHP_SESSION_ACTIVE) {
 			session_start();
 		}
+	}
+
+	/**
+	 * Atribui a mensagem na sessão
+	 *
+	 * @param string $sMensagem
+	 * @param string $sTipo
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function setMensagem(string $sMensagem, string $sTipo): void {
+		$_SESSION['mensagem'] = $sMensagem;
+		$_SESSION['tipo_mensagem'] = $sTipo;
+	}
+
+	/**
+	 * Verifica se possui mensagem na sessão
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function hasMensagem(): bool {
+		return !empty($_SESSION['mensagem']);
+	}
+
+	/**
+	 * Retorna a mensagem atribuída na sessão
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return string
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function getMensagem(): string {
+		if ($_SESSION['tipo_mensagem'] == "sucesso") {
+			return "
+					<div class=\"bg-success text-white mensagem_session\">
+						<p style=\"margin-bottom: 0\">" . $_SESSION['mensagem'] . "</p>
+					</div>
+					";
+		} elseif ($_SESSION['tipo_mensagem'] == "alerta") {
+			return "
+					<div class=\"bg-warning text-dark mensagem_session\">
+						<p style=\"margin-bottom: 0\">" . $_SESSION['mensagem'] . "</p>
+					</div>
+					";
+		} elseif ($_SESSION['tipo_mensagem'] == "erro") {
+			return "
+					<div class=\"bg-danger text-white mensagem_session\">
+						<p style=\"margin-bottom: 0\">" . $_SESSION['mensagem'] . "</p>
+					</div>
+					";
+		}
+
+		return throw new \Exception("Tipo de mensagem não implementado.");
+	}
+
+	/**
+	 * Remove a mensagem da sessão
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function removerMensagem(): void {
+		unset($_SESSION['mensagem']);
+		unset($_SESSION['tipo_mensagem']);
 	}
 }

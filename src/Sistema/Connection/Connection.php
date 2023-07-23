@@ -57,7 +57,7 @@ class Connection implements ConnectionInterface {
 		try {
 			return $oSttm->execute();
 		} catch (\PDOException $oExp) {
-			throw new \Exception("Não foi possível consultar os dados.",0,$oExp);
+			throw new \Exception("Ocorreu um erro interno no sistema.",0,$oExp);
 		}
 	}
 
@@ -86,7 +86,7 @@ class Connection implements ConnectionInterface {
 			$oSttm->execute();
 			return $oSttm->fetchAll();
 		} catch (\PDOException $oExp) {
-			throw new \Exception("Não foi possível consultar os dados.",0,$oExp);
+			throw new \Exception("Ocorreu um erro interno no sistema.",0,$oExp);
 		}
 	}
 
@@ -113,9 +113,52 @@ class Connection implements ConnectionInterface {
 
 		try {
 			$oSttm->execute();
-			return $oSttm->fetch();
+
+			$aResult = $oSttm->fetchAll();
+
+			if (empty($aResult)) {
+				return $aResult;
+			}
+
+			return $aResult[0];
 		} catch (\PDOException $oExp) {
-			throw new \Exception("Não foi possível consultar os dados.",0,$oExp);
+			throw new \Exception("Ocorreu um erro interno no sistema.",0,$oExp);
 		}
+	}
+
+	/**
+	 * Inicia uma transação
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function begin(): void {
+		$this->oPDO->beginTransaction();
+	}
+
+	/**
+	 * Confirma uma transação
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function commit(): void {
+		$this->oPDO->commit();
+	}
+
+	/**
+	 * Desfaz uma transação
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function rollBack(): void {
+		$this->oPDO->rollBack();
 	}
 }
