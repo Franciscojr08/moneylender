@@ -582,7 +582,7 @@ class Emprestimo {
 		if ($this->isPagamentoParcelado()){
 			$bPrimeiraParcelaJaCadastrada = false;
 			$iQuantidadeParcelas = $aEmprestimo['emo_quantidade_parcelas'];
-			$fValorDevido = $this->getValorDevido();
+			$fValorDevido = round($this->getValorDevido(),2);
 			$iValorMaximo = $fValorDevido;
 
 			$oPrimeiraParcela = new \DateTimeImmutable($aEmprestimo['pra_data_previsao_pagamento']);
@@ -591,7 +591,7 @@ class Emprestimo {
 			$iAno = $oPrimeiraParcela->format("Y");
 
 			for ($i = 0; $i < $iQuantidadeParcelas; $i++) {
-				$fValorParcela = $this->calcularParcela($this->getValorDevido(),$iQuantidadeParcelas, $iValorMaximo);
+				$fValorParcela = $this->calcularParcela($fValorDevido,$iQuantidadeParcelas, $iValorMaximo);
 
 				$oParcela = new Parcela();
 				$oParcela->setEmprestimo($this->iId);
@@ -655,7 +655,7 @@ class Emprestimo {
 	 */
 	public function lancarPagamento(array $aDados): bool {
 		$aDados = array_merge($aDados,['emo_id' => $this->getId()]);
-		$fValorPagamento = floatval($aDados['pgo_valor']);
+		$fValorPagamento = round($aDados['pgo_valor'],2);
 		$this->validarPagamento($fValorPagamento);
 
 		$oPagamento = new Pagamento();
@@ -667,14 +667,14 @@ class Emprestimo {
 			throw new \Exception("Não foi possível lançar o pagamento.");
 		}
 
-		$this->setValorDevido($this->getValorDevido() - $fValorPagamento);
-		$this->setValorPago($this->getValorPago() + $fValorPagamento);
+		$this->setValorDevido(round($this->getValorDevido(),2) - $fValorPagamento);
+		$this->setValorPago(round($this->getValorPago(),2) + $fValorPagamento);
 		$this->atualizar();
 
 		if ($this->isPagamentoParcelado()) {
 			$oParcela = Sistema::ParcelaDAO()->find($aDados['pra_id']);
-			$oParcela->setValorDevido( $oParcela->getValorDevido() - $fValorPagamento);
-			$oParcela->setValorPago($oParcela->getValorPago() + $fValorPagamento);
+			$oParcela->setValorDevido( round($oParcela->getValorDevido(),2) - $fValorPagamento);
+			$oParcela->setValorPago(round($oParcela->getValorPago(),2) + $fValorPagamento);
 			$oParcela->atualizar();
 		}
 
@@ -706,18 +706,23 @@ class Emprestimo {
 	 *
 	 * @param int $fValorEmprestimo
 	 * @param int $iNumeroParcelas
-	 * @param float $iValorMaximo
+	 * @param float $fValorMaximo
 	 * @author Francisco Santos franciscosantos@moobitech.com.br
 	 * @return float
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	private function calcularParcela(int $fValorEmprestimo, int $iNumeroParcelas, float $iValorMaximo): float {
+	private function calcularParcela(int $fValorEmprestimo, int $iNumeroParcelas, float $fValorMaximo): float {
 		$fValorParcela = round($fValorEmprestimo / $iNumeroParcelas,2);
+		$fValorMaximo = round($fValorMaximo,2);
 
-		while ($fValorParcela > $iValorMaximo) {
+		while ($fValorParcela > $fValorMaximo) {
 			$fValorParcela -= 0.01;
 			$fValorParcela = round($fValorParcela, 2);
+
+			if ($fValorParcela == $fValorMaximo) {
+				break;
+			}
 		}
 
 		return $fValorParcela;

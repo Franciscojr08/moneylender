@@ -1,7 +1,9 @@
 <?php
 
 use MoneyLender\Core\Functions;
+use MoneyLender\Src\Emprestimo\EmprestimoList;
 
+/** @var EmprestimoList $loEmprestimos */
 ?>
 
 <!doctype html>
@@ -31,22 +33,29 @@ use MoneyLender\Core\Functions;
 		<?php Functions::renderMensagem(true, 98); ?>
 	</div>
 
+	<div class="inf_emprestimos">
+		<label>Empréstimos: <span><?php echo $loEmprestimos->count(); ?></span></label>
+		<label>Em Aberto: <span><?php echo $loEmprestimos->getQuantidadeEmAberto(); ?></span></label>
+		<label>Atrasados: <span><?php echo $loEmprestimos->getQuantidadeAtrasado(); ?></span></label>
+		<label>Pagos: <span><?php echo $loEmprestimos->getQuantidadePago(); ?></span></label>
+	</div>
+
 	<table class="table table-striped tabela_emprestimo">
 		<thead>
 		<tr class="table-dark">
-			<th scope="col">Código</th>
+			<th scope="col" title="Código Empréstimo"><i class="fa-solid fa-barcode fa-lg"></i></th>
 			<th scope="col">Data Emp.</th>
 			<th scope="col">Data Atl.</th>
 			<th scope="col">Cliente</th>
 			<th scope="col">Valor</th>
-			<th scope="col">Juros (% / R$)</th>
+			<th scope="col">Juros</th>
 			<th scope="col">Valor Total</th>
 			<th scope="col">Devido / Pago</th>
 			<th scope="col">Parcelas</th>
 			<th scope="col">Situação</th>
 			<th scope="col">Prev. PG</th>
-			<th scope="col">Pagamentos</th>
-			<th scope="col">Controle</th>
+			<th scope="col" title="Pagamentos"><i class="fa-solid fa-money-bill-trend-up fa-lg"></i></th>
+			<th scope="col" title="Ações do empréstimo"><i class="fa-solid fa-gears fa-lg"></i></th>
 		</tr>
 		</thead>
 		<tbody>

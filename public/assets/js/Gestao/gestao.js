@@ -32,7 +32,10 @@ function modalVisualizarPagamento() {
 			url: "../../gestao/carregarModalVisualizarPagamentos",
 			type: "POST",
 			dataType: "html",
-			data: {iEmoId:iEmoId},
+			data: {
+				iEmoId:iEmoId,
+				sUrl:window.location.href
+			},
 			success: function (html) {
 				$("#modalVisualizarPagamentos").html(html).modal("show");
 			}
@@ -48,7 +51,10 @@ function modalLancarPagamento() {
 			url: "../../gestao/carregarModalLancarPagamento",
 			type: "POST",
 			dataType: "html",
-			data: {iEmoId:iEmoId},
+			data: {
+				iEmoId:iEmoId,
+				sUrl:window.location.href
+			},
 			success: function (html) {
 				$("#modalLancarPagamentos").html(html).modal("show");
 			}

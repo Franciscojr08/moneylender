@@ -93,4 +93,23 @@ class ParcelaList extends \SplObjectStorage {
 
 		return $aParcelas;
 	}
+
+	/**
+	 * Retorna se alguma parcela possui pagamentos
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function hasPagamento(): bool {
+		/** @var Parcela $oParcela */
+		foreach ($this as $oParcela) {
+			if ($oParcela->hasPagamentos()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

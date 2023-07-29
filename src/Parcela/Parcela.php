@@ -334,7 +334,7 @@ class Parcela {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function hasPagamentos(): bool {
-		return !empty($this->loPagamentos);
+		return $this->fValorPago > 0.0;
 	}
 
 	/**

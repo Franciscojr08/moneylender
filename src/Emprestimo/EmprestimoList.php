@@ -339,4 +339,67 @@ class EmprestimoList extends \SplObjectStorage {
 
 		return true;
 	}
+
+	/**
+	 * Retorna a quantidade de empréstimos em aberto
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getQuantidadeEmAberto(): int {
+		$iTotal = 0;
+
+		/** @var Emprestimo $oEmprestimo */
+		foreach ($this as $oEmprestimo) {
+			if ($oEmprestimo->getSituacaoId() != SituacaoEmprestimoEnum::PAGO){
+				$iTotal++;
+			}
+		}
+
+		return $iTotal;
+	}
+
+	/**
+	 * Retorna a quantidade de empréstimos atrasados
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getQuantidadeAtrasado(): int{
+		$iTotal = 0;
+
+		/** @var Emprestimo $oEmprestimo */
+		foreach ($this as $oEmprestimo) {
+			if ($oEmprestimo->getSituacaoId() == SituacaoEmprestimoEnum::ATRASADO){
+				$iTotal++;
+			}
+		}
+
+		return $iTotal;
+	}
+
+	/**
+	 * Retorna a quantidade de empréstimos pagos
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getQuantidadePago(): int {
+		$iTotal = 0;
+
+		/** @var Emprestimo $oEmprestimo */
+		foreach ($this as $oEmprestimo) {
+			if ($oEmprestimo->getSituacaoId() == SituacaoEmprestimoEnum::PAGO){
+				$iTotal++;
+			}
+		}
+
+		return $iTotal;
+	}
 }

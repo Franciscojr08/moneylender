@@ -21,11 +21,11 @@ CREATE TABLE emo_emprestimo
 (
     emo_id                      SMALLINT unsigned PRIMARY KEY auto_increment,
     psa_id                      SMALLINT unsigned not null,
-    emo_valor                   FLOAT             NOT NULL,
-    emo_valor_pago              FLOAT             NULL,
-    emo_valor_devido            FLOAT             NULL,
-    emo_taxa_juros              FLOAT             NULL,
-    emo_valor_juros             FLOAT             NULL,
+    emo_valor                   DECIMAL(11,2)             NOT NULL,
+    emo_valor_pago              DECIMAL(11,2)             NULL,
+    emo_valor_devido            DECIMAL(11,2)             NULL,
+    emo_taxa_juros              DECIMAL(11,2)             NULL,
+    emo_valor_juros             DECIMAL(11,2)             NULL,
     emo_data_emprestimo         DATE              NOT NULL,
     emo_pagamento_parcelado     TINYINT(1) DEFAULT 2,
     emo_data_previsao_pagamento DATE              NULL,
@@ -55,9 +55,9 @@ CREATE TABLE pra_parcela
 (
     pra_id                      SMALLINT unsigned PRIMARY KEY auto_increment,
     emo_id                      SMALLINT unsigned NOT NULL,
-    pra_valor                   FLOAT             NOT NULL,
-    pra_valor_pago              FLOAT             NULL,
-    pra_valor_devido            FLOAT             NULL,
+    pra_valor                   DECIMAL(11,2)             NOT NULL,
+    pra_valor_pago              DECIMAL(11,2)             NULL,
+    pra_valor_devido            DECIMAL(11,2)             NULL,
     pra_data_previsao_pagamento DATE              NOT NULL,
     pra_situacao                TINYINT(1)        NOT NULL,
     pra_sequencia_parcela       SMALLINT unsigned NOT NULL,
@@ -71,7 +71,7 @@ ALTER TABLE pra_parcela
 CREATE TABLE pgo_pagamento
 (
     pgo_id               SMALLINT unsigned PRIMARY KEY auto_increment,
-    pgo_valor            FLOAT      NOT NULL,
+    pgo_valor            DECIMAL(11,2)      NOT NULL,
     pgo_forma_pagamento  tinyint(1) NOT NULL,
     pgo_data_pagamento   DATE       NOT NULL
 );

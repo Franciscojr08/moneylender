@@ -4,13 +4,15 @@ use MoneyLender\Src\Emprestimo\Emprestimo;
 use MoneyLender\Src\Parcela\Parcela;
 use MoneyLender\Src\Parcela\ParcelaList;
 use MoneyLender\Src\Sistema\Enum\FormaPagamentoEnum;
-use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 /**
  * @var Emprestimo $oEmprestimo
  * @var ParcelaList $loParcelas
  * @var Parcela $oParcela
+ * @var string $sDescricaoPessoa
  */
+
+$sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 ?>
 
 <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -19,17 +21,14 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 	<div class="modal-content">
 		<form type="POST" action="../gestao/lancarPagamento">
 			<input type="hidden" name="emo_id" value="<?php echo $oEmprestimo->getId(); ?>">
+			<input type="hidden" name="sUrl" value="<?php echo $sAcao; ?>">
+
 			<div class="modal-header">
 				<h5 class="modal-title" id="">Lançar Pagamentos</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="width: 100%;">
-				<div style="    margin-left: 2%;
-    border-bottom: 1px solid #aaa;
-    width: 96%;
-    font-weight: bold;
-    font-style: italic;
-    box-shadow: 0px 2px 0px #f57449;">
+				<div class="modal_pagamento" ">
 					<label style="padding-bottom: 10px">Realizar Pagamento da Parcela</label><br>
 				</div>
 				<div>
@@ -38,7 +37,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 						<tr class="table-dark">
 							<th scope="col">Emp.</th>
 							<th scope="col">Parcela</th>
-							<th scope="col">Cliente</th>
+							<th scope="col"><?php echo $sDescricaoPessoa; ?></th>
 							<th scope="col">Devido</th>
 							<th scope="col">Pago</th>
 							<th scope="col">Vencimento</th>

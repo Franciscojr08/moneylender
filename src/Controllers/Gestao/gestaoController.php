@@ -75,7 +75,24 @@ class gestaoController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function carregarModalVisualizarPagamentos(array $aDados): void {
-		// TODO: Implementar método.
+		try {
+			$oEmprestimo = Sistema::EmprestimoDAO()->find($aDados['iEmoId']);
+			$sDescricaoPessoa = $this->isAcaoFornecedor($aDados) ? "Fornecedor" : "Cliente";
+
+			if ($oEmprestimo->isPagamentoParcelado())  {
+				$loParcelas = $oEmprestimo->getParcelas();
+
+				require_once "Gestao/pagamento/visualizar_pagamento_parcelado.php";
+			} else {
+				$loPagamentoList = Sistema::PagamentoDAO()->findByEmprestimo($oEmprestimo);
+
+				require_once "Gestao/pagamento/visualizar_pagamento.php";
+			}
+		} catch (\Exception $oExp) {
+			$sMensagem = $oExp->getMessage();
+
+			require_once "Sistema/modalExeption.php";
+		}
 	}
 
 	/**
@@ -90,6 +107,7 @@ class gestaoController {
 	public function carregarModalLancarPagamento(array $aDados): void {
 		try {
 			$oEmprestimo = Sistema::EmprestimoDAO()->find($aDados['iEmoId']);
+			$sDescricaoPessoa = $this->isAcaoFornecedor($aDados) ? "Fornecedor" : "Cliente";
 
 			if ($oEmprestimo->isPagamentoParcelado())  {
 				$loParcelas = $oEmprestimo->getParcelas();
@@ -115,6 +133,8 @@ class gestaoController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function lancarPagamento(array $aDados): void {
+		$sAcao = $this->isAcaoFornecedor($aDados) ? "/pessoal" : "";
+
 		try {
 			$oEmprestimo = Sistema::EmprestimoDAO()->find($aDados['emo_id']);
 			$aDados['pgo_valor'] = str_replace(",",".",preg_replace("/[^0-9,]/", "", $aDados['pgo_valor']));
@@ -128,7 +148,7 @@ class gestaoController {
 			Session::setMensagem($oExp->getMessage(), "erro");
 		}
 
-		header("Location: ../gestao");
+		header("Location: ../gestao{$sAcao}");
 	}
 
 	/**
@@ -158,5 +178,19 @@ class gestaoController {
 		}
 
 		echo json_encode($aRetorno);
+	}
+
+	/**
+	 * Retorna se ação é para o fornecedor
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	private function isAcaoFornecedor(array $aDados): bool {
+		$aUrl = explode("/",$aDados['sUrl']);
+		return end($aUrl) == "pessoal";
 	}
 }

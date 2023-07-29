@@ -64,13 +64,13 @@ class emprestimoController {
 			$oEmprestimo->setSituacao(SituacaoEmprestimoEnum::EM_ABERTO);
 
 			if (!empty($aEmprestimo['emo_taxa_juros'])) {
-				$fTaxaJuros = doubleval($aEmprestimo['emo_taxa_juros']);
+				$fTaxaJuros = floatval($aEmprestimo['emo_taxa_juros']);
 				$fValorJuros = ($fValor * ($fTaxaJuros / 100));
 				$fValorDevido = $fValor + $fValorJuros;
 
 				$oEmprestimo->setTaxaJuros($fTaxaJuros);
-				$oEmprestimo->setValorJuros($fValorJuros);
-				$oEmprestimo->setValorDevido($fValorDevido);
+				$oEmprestimo->setValorJuros(round($fValorJuros,2));
+				$oEmprestimo->setValorDevido(round($fValorDevido,2));
 			}
 
 			if ($aEmprestimo['emo_pagamento_parcelado'] != SimNaoEnum::NAO ) {

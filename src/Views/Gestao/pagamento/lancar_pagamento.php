@@ -5,7 +5,10 @@ use MoneyLender\Src\Sistema\Enum\FormaPagamentoEnum;
 
 /**
  * @var Emprestimo $oEmprestimo
+ * @var string $sDescricaoPessoa
  */
+
+$sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 ?>
 
 <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -14,17 +17,14 @@ use MoneyLender\Src\Sistema\Enum\FormaPagamentoEnum;
 	<div class="modal-content">
 		<form type="POST" action="../gestao/lancarPagamento">
 			<input type="hidden" name="emo_id" value="<?php echo $oEmprestimo->getId(); ?>">
+			<input type="hidden" name="sUrl" value="<?php echo $sAcao; ?>">
+
 			<div class="modal-header">
 				<h5 class="modal-title" id="">Lançar Pagamentos</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="width: 100%;">
-				<div style="    margin-left: 2%;
-    border-bottom: 1px solid #aaa;
-    width: 96%;
-    font-weight: bold;
-    font-style: italic;
-    box-shadow: 0px 2px 0px #f57449;">
+				<div class="modal_pagamento">
 					<label style="padding-bottom: 10px">Realizar Pagamento do Empréstimo</label><br>
 				</div>
 				<div>
@@ -32,7 +32,7 @@ use MoneyLender\Src\Sistema\Enum\FormaPagamentoEnum;
 						<thead>
 						<tr class="table-dark">
 							<th scope="col">Cód</th>
-							<th scope="col">Cliente</th>
+							<th scope="col"><?php echo $sDescricaoPessoa; ?></th>
 							<th scope="col">Valor Devido</th>
 							<th scope="col">Valor Pago</th>
 							<th scope="col">Vencimento</th>

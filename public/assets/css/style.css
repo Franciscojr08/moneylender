@@ -335,3 +335,33 @@ input:focus, select:focus {
     font-weight: bold;
     color: #ff0000;
 }
+
+.modal_pagamento {
+    margin-left: 2%;
+    border-bottom: 1px solid #aaa;
+    width: 96%;
+    font-weight: bold;
+    font-style: italic;
+    box-shadow: 0 2px 0 #f57449
+}
+
+.inf_emprestimos {
+    width: 36%;
+    margin-right: 2%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #212529;
+    color: #f57449;
+    padding: 5px;
+    border-bottom: 1px solid;
+    border-radius: 5px 5px 0 0;
+    float: right;
+}
+
+.inf_emprestimos label {
+    font-weight: bold
+}
+
+.inf_emprestimos span {
+    color: #fff;
+}
