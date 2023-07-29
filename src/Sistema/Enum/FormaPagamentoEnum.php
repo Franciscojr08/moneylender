@@ -17,6 +17,7 @@ enum FormaPagamentoEnum implements EnumInterface {
 	const PIX = 4;
 	const TRANSFERENCIA = 5;
 	const DEPOSITO = 6;
+	const BOLETO = 7;
 
 	/**
 	 * Retorna um array de valores do enum
@@ -36,7 +37,7 @@ enum FormaPagamentoEnum implements EnumInterface {
 
 		$aValores[] = [
 			'valor' => self::CARTAO_DEBITO,
-			'descricao' => "Cartão (Crédito)"
+			'descricao' => "Cartão (Débito)"
 		];
 
 		$aValores[] = [
@@ -57,6 +58,11 @@ enum FormaPagamentoEnum implements EnumInterface {
 		$aValores[] = [
 			'valor' => self::DEPOSITO,
 			'descricao' => "Depósito Bancário"
+		];
+		
+		$aValores[] = [
+			'valor' => self::BOLETO,
+			'descricao' => "Boleto"
 		];
 
 		return $aValores;
@@ -80,6 +86,7 @@ enum FormaPagamentoEnum implements EnumInterface {
 			self::PIX => "PIX",
 			self::TRANSFERENCIA => "Transferência Eletrônica",
 			self::DEPOSITO => "Depósito Bancário",
+			self::BOLETO => "Boleto",
 			default => throw new Exception("Tipo de relatório não encontrado.")
 		};
 	}

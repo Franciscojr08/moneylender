@@ -13,7 +13,7 @@ enum SituacaoEmprestimoEnum implements EnumInterface {
 
 	const EM_ABERTO = 1;
 	const PAGO = 2;
-	const CANCELADO = 3;
+	const ATRASADO = 3;
 
 	/**
 	 * Retorna um array de valores do enum
@@ -37,8 +37,8 @@ enum SituacaoEmprestimoEnum implements EnumInterface {
 		];
 
 		$aValores[] = [
-			'valor' => self::CANCELADO,
-			'descricao' => "Cancelado"
+			'valor' => self::ATRASADO,
+			'descricao' => "Atrasado"
 		];
 
 		return $aValores;
@@ -58,7 +58,7 @@ enum SituacaoEmprestimoEnum implements EnumInterface {
 		return match ($iValorEnum) {
 			self::EM_ABERTO => "Em aberto",
 			self::PAGO => "Pago",
-			self::CANCELADO => "Cancelado",
+			self::ATRASADO => "Atrasado",
 			default => throw new Exception("Tipo de arquivo não encontrado.")
 		};
 	}

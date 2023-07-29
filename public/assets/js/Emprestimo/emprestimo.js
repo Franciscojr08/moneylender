@@ -40,8 +40,8 @@ $(document).ready(function() {
 });
 
 function mudarCliente() {
-	const EMP_PESSOAL = 1;
-	const EMP_CLIENTE = 2;
+	const EMP_CLIENTE = 1;
+	const EMP_PESSOAL = 2;
 
 	$(".emo_tipo").change(function() {
 		let eInputTipo = $("#emo_tipo");

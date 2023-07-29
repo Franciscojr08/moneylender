@@ -2,6 +2,8 @@
 
 namespace MoneyLender\Src\Sistema;
 
+use MoneyLender\Src\Pagamento\PagamentoDAO;
+use MoneyLender\Src\Pagamento\PagamentoDAOInterface;
 use MoneyLender\Src\Pessoa\PessoaDAO;
 use MoneyLender\Src\Pessoa\PessoaDAOInterface;
 use MoneyLender\Src\Emprestimo\EmprestimoDAO;
@@ -54,7 +56,27 @@ class Sistema {
 		return new ParcelaDAO();
 	}
 
+	/**
+	 * Retorna o DAO de pessoa
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return PessoaDAOInterface
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
 	public static function PessoaDAO(): PessoaDAOInterface {
 		return new PessoaDAO();
+	}
+
+	/**
+	 * Retorna o DAO de pagamento
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return PagamentoDAOInterface
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function PagamentoDAO(): PagamentoDAOInterface {
+		return new PagamentoDAO();
 	}
 }

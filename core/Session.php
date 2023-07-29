@@ -72,27 +72,19 @@ class Session {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public static function getMensagem(): string {
-		if ($_SESSION['tipo_mensagem'] == "sucesso") {
-			return "
-					<div class=\"bg-success text-white mensagem_session\">
-						<p style=\"margin-bottom: 0\">" . $_SESSION['mensagem'] . "</p>
-					</div>
-					";
-		} elseif ($_SESSION['tipo_mensagem'] == "alerta") {
-			return "
-					<div class=\"bg-warning text-dark mensagem_session\">
-						<p style=\"margin-bottom: 0\">" . $_SESSION['mensagem'] . "</p>
-					</div>
-					";
-		} elseif ($_SESSION['tipo_mensagem'] == "erro") {
-			return "
-					<div class=\"bg-danger text-white mensagem_session\">
-						<p style=\"margin-bottom: 0\">" . $_SESSION['mensagem'] . "</p>
-					</div>
-					";
-		}
+		return $_SESSION['mensagem'];
+	}
 
-		return throw new \Exception("Tipo de mensagem não implementado.");
+	/**
+	 * Retorna o tipo da mensagem
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return string
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function getTipoMensagem(): string {
+		return $_SESSION['tipo_mensagem'];
 	}
 
 	/**

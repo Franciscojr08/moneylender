@@ -25,6 +25,7 @@ CREATE TABLE emo_emprestimo
     emo_valor_pago              FLOAT             NULL,
     emo_valor_devido            FLOAT             NULL,
     emo_taxa_juros              FLOAT             NULL,
+    emo_valor_juros             FLOAT             NULL,
     emo_data_emprestimo         DATE              NOT NULL,
     emo_pagamento_parcelado     TINYINT(1) DEFAULT 2,
     emo_data_previsao_pagamento DATE              NULL,
@@ -58,8 +59,8 @@ CREATE TABLE pra_parcela
     pra_valor_pago              FLOAT             NULL,
     pra_valor_devido            FLOAT             NULL,
     pra_data_previsao_pagamento DATE              NOT NULL,
-    pra_data_pagamento          DATE              NULL,
     pra_situacao                TINYINT(1)        NOT NULL,
+    pra_sequencia_parcela       SMALLINT unsigned NOT NULL,
     pra_data_cadastro           DATE              NOT NULL,
     pra_data_atualizacao        DATE              NULL
 );
@@ -72,8 +73,7 @@ CREATE TABLE pgo_pagamento
     pgo_id               SMALLINT unsigned PRIMARY KEY auto_increment,
     pgo_valor            FLOAT      NOT NULL,
     pgo_forma_pagamento  tinyint(1) NOT NULL,
-    pgo_data_pagamento   DATE       NOT NULL,
-    pgo_data_atualizacao DATE       NULL
+    pgo_data_pagamento   DATE       NOT NULL
 );
 
 CREATE TABLE pgm_pagamento_emprestimo
@@ -81,7 +81,7 @@ CREATE TABLE pgm_pagamento_emprestimo
     pgm_id SMALLINT unsigned PRIMARY KEY auto_increment,
     pgo_id SMALLINT unsigned NOT NULL,
     emo_id SMALLINT unsigned NOT NULL,
-    pra_id SMALLINT unsigned NOT NULL
+    pra_id SMALLINT unsigned NULL
 );
 
 ALTER TABLE pgm_pagamento_emprestimo

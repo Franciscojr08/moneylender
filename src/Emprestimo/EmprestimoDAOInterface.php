@@ -2,6 +2,7 @@
 
 namespace MoneyLender\Src\Emprestimo;
 
+use Exception;
 use MoneyLender\Src\Pessoa\Pessoa;
 
 /**
@@ -14,13 +15,14 @@ interface EmprestimoDAOInterface {
 	/**
 	 * Consulta todos em empréstimos
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return EmprestimoList
-	 * @throws \Exception
+	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(): EmprestimoList;
+	public function findAll(bool $bFiltrarFornecedor = false): EmprestimoList;
 
 	/**
 	 * Consulta um empréstimo pelo Id
@@ -28,7 +30,7 @@ interface EmprestimoDAOInterface {
 	 * @param int $iEmoId
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return Emprestimo
-	 * @throws \Exception
+	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
@@ -39,10 +41,34 @@ interface EmprestimoDAOInterface {
 	 *
 	 * @param Pessoa $oPessoa
 	 * @return EmprestimoList
-	 * @throws \Exception
+	 * @throws Exception
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function findByPessoa(Pessoa $oPessoa): EmprestimoList;
+
+	/**
+	 * Cadastra um empréstimo
+	 *
+	 * @param Emprestimo $oEmprestimo
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function save(Emprestimo $oEmprestimo): bool;
+
+	/**
+	 * Atualiza um empréstimo
+	 *
+	 * @param Emprestimo $oEmprestimo
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function update(Emprestimo $oEmprestimo): bool;
 }

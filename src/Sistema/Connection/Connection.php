@@ -161,4 +161,16 @@ class Connection implements ConnectionInterface {
 	public function rollBack(): void {
 		$this->oPDO->rollBack();
 	}
+
+	/**
+	 * Retorna o último Id inserido
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getLasInsertId(): int {
+		return intval($this->oPDO->lastInsertId());
+	}
 }

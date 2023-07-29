@@ -120,15 +120,34 @@ class Functions {
 	/**
 	 * Renderiza a mensagem da sessão
 	 *
+	 * @param bool $bAddPaddingBottom
+	 * @param int $iWidth
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public static function renderMensagem(): void {
+	public static function renderMensagem(bool $bAddPaddingBottom = false, int $iWidth = 89): void {
 		if (Session::hasMensagem()) {
 			try {
-				echo Session::getMensagem();
+				$sMensagem = Session::getMensagem();
+				$sTipoMensagem = Session::getTipoMensagem();
+				$sClass = "mensagem_session";
+				$sStyle = $bAddPaddingBottom ? "style='margin-bottom: 1%; width: $iWidth%;'" : "";
+
+				if ($sTipoMensagem == "sucesso") {
+					$sClass .= " bg-success text-white";
+				} elseif ($sTipoMensagem == "alerta") {
+					$sClass .= " bg-warning text-dark";
+				} elseif ($sTipoMensagem == "erro") {
+					$sClass .= " bg-danger text-white";
+				}
+
+				echo "
+					<div class=\"$sClass\" $sStyle>
+						<p style=\"margin-bottom: 0\">" . $sMensagem . "</p>
+					</div>
+					";
 				Session::removerMensagem();
 			} catch (Exception $oExp) {
 				$eDiv = "<div class=\"bg-danger text-white mensagem_session\">";

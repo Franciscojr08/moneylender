@@ -2,6 +2,7 @@
 
 use MoneyLender\Src\Emprestimo\Emprestimo;
 use MoneyLender\Src\Emprestimo\EmprestimoList;
+use MoneyLender\Src\Sistema\Enum\SituacaoEmprestimoEnum;
 
 /**
  * @var EmprestimoList $loEmprestimos
@@ -31,8 +32,8 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 		$sParcelas = "- - -";
 		$sDataPrevPG = "- - -";
 
-		$sValorPagoDevido = "R$ " . number_format($oEmprestimo->getValorPago(),2,",",".");
-		$sValorPagoDevido .= " / R$ " . number_format($oEmprestimo->getValorDevido(),2,",",".");
+		$sValorPagoDevido = "R$ " . number_format($oEmprestimo->getValorDevido(),2,",",".");
+		$sValorPagoDevido .= " / R$ " . number_format($oEmprestimo->getValorPago(),2,",",".");
 
 		if ($oEmprestimo->hasTaxaJuros()) {
 			$sJuros = "{$oEmprestimo->getTaxaJuros()} % / R$ " . number_format($oEmprestimo->getValorJuros(),2,",",".");
@@ -40,6 +41,7 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 
 		if ($oEmprestimo->isPagamentoParcelado()) {
 			$sParcelas = "{$oEmprestimo->getParcelas()->count()} / {$oEmprestimo->getParcelas()->getParcelasPagas()->count()}";
+		} else {
 			$sDataPrevPG = $oEmprestimo->getDataPrevisaoPagamento()->format("d/m/Y");
 		}
 
@@ -61,7 +63,27 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 			<td><?php echo $sParcelas; ?></td>
 			<td><?php echo $sDescricao; ?></td>
 			<td><?php echo $sDataPrevPG; ?></td>
-			<td>Olho e plus></td>
-			<td>Lápis e lixeira></td>
+			<td>
+				<a class="icon_acao btn_visualizar_pagamento" data-target="<?php echo $oEmprestimo->getId(); ?>" title="Visualizar">
+					<i class="fa-solid fa-eye fa-lg" style="margin-right: 5px;"></i>
+				</a>
+
+				<?php if ($oEmprestimo->getSituacaoId() != SituacaoEmprestimoEnum::PAGO) { ?>
+					<a class="icon_acao btn_lancar_pagamento" data-target="<?php echo $oEmprestimo->getId(); ?>" title="Lançar Pagamento">
+						<i class="fa-solid fa-circle-plus fa-lg"></i>
+					</a>
+				<?php } ?>
+			</td>
+			<td>
+				<?php if (!$oEmprestimo->hasPagamentos()) { ?>
+					<a class="icon_acao editar btn_editar_emprestimo" data-target="<?php echo $oEmprestimo->getId(); ?>" title="Editar">
+						<i class="fa-solid fa-pen-to-square fa-lg" style="margin-right: 5px;"></i>
+					</a>
+				<?php } ?>
+
+				<a class="icon_acao excluir btn_excluir_emprestimo" data-target="<?php echo $oEmprestimo->getId(); ?>" title="Excluir">
+					<i class="fa-solid fa-trash fa-lg"></i>
+				</a>
+			</td>
 		</tr>
 <?php } } ?>

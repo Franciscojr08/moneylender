@@ -42,9 +42,9 @@ class pessoaController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function pessoaAjax(array $aDados): void {
-		$loPessoaList = Sistema::PessoaDAO()->findAll();
 		$aUrl = explode("/",$aDados['sUrl']);
 		$bFiltrarFornecedor = end($aUrl) == "fornecedor";
+		$loPessoaList = Sistema::PessoaDAO()->findAll($bFiltrarFornecedor);
 
 		require_once "Pessoa/include/pessoa.php";
 	}

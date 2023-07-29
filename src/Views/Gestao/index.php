@@ -27,6 +27,10 @@ use MoneyLender\Core\Functions;
 
 	<?php require_once "Gestao/include/cards.php"; ?>
 
+	<div style="margin: 0 0 0 2%;">
+		<?php Functions::renderMensagem(true, 98); ?>
+	</div>
+
 	<table class="table table-striped tabela_emprestimo">
 		<thead>
 		<tr class="table-dark">
@@ -38,7 +42,7 @@ use MoneyLender\Core\Functions;
 			<th scope="col">Juros (% / R$)</th>
 			<th scope="col">Valor Total</th>
 			<th scope="col">Devido / Pago</th>
-			<th scope="col">Parcelas / Pagas</th>
+			<th scope="col">Parcelas</th>
 			<th scope="col">Situação</th>
 			<th scope="col">Prev. PG</th>
 			<th scope="col">Pagamentos</th>
@@ -50,7 +54,16 @@ use MoneyLender\Core\Functions;
 	</table>
 </div>
 
+<div class="modal fade" id="modalVisualizarPagamentos"></div>
+<div class="modal fade" id="modalLancarPagamentos"></div>
+
+<div class="modal fade" id="modalEditarEmprestimo"></div>
+<div class="modal fade" id="modalExcluirEmprestimo"></div>
+
 <?php Functions::renderFooter(); ?>
 <?php Functions::addScript(["js/Gestao/gestao.js", "js/Sistema/sistema.js"]); ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+
 </body>
 </html>

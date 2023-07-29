@@ -5,6 +5,10 @@ nav {
     align-items: center;
 }
 
+.table>tbody {
+    vertical-align: middle;
+}
+
 nav img {
     width: 10rem;
     height: 4rem;
@@ -323,4 +327,11 @@ input:focus, select:focus {
 .excluir:hover {
     color: #f57449;
     transition: 0.3s;
+}
+
+.mensagem_error {
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff0000;
 }

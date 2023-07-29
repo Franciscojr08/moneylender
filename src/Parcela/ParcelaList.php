@@ -2,6 +2,8 @@
 
 namespace MoneyLender\Src\Parcela;
 
+use MoneyLender\Src\Sistema\Enum\SituacaoParcelaEnum;
+
 class ParcelaList extends \SplObjectStorage {
 
 	/**
@@ -58,11 +60,37 @@ class ParcelaList extends \SplObjectStorage {
 
 		/** @var Parcela $oParcela */
 		foreach ($this as $oParcela) {
-			if ($oParcela->hasPagamentos()) {
+			if ($oParcela->getSituacao() == SituacaoParcelaEnum::PAGA) {
 				$loParcelasPagas->attach($oParcela);
 			}
 		}
 
 		return $loParcelasPagas;
+	}
+
+	/**
+	 * Retorna o combo das parcelas não pagas
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return array
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getComboNaoPagas(): array {
+		$aParcelas = [];
+
+		/** @var Parcela $oParcela */
+		foreach ($this as $oParcela) {
+			if ($oParcela->getSituacao() == SituacaoParcelaEnum::PAGA) {
+				continue;
+			}
+
+			$aParcelas[] = [
+				"valor" => $oParcela->getId(),
+				"descricao" => "{$oParcela->getSequenciaParcela()}ª Parcela"
+			];
+		}
+
+		return $aParcelas;
 	}
 }

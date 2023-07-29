@@ -8,7 +8,24 @@ $(document).ready(function() {
 	});
 
 	carregarPessoas();
+	changeCampoIndicado();
+	modalEditarPessoa();
+	modalExcluirPessoa();
+})
 
+function carregarPessoas() {
+	$.ajax({
+		url: "../pessoa/pessoaAjax",
+		type: "POST",
+		data: {sUrl:window.location.href},
+		dataType: "HTML",
+		success: function (html) {
+			$(".tabela_pessoa tbody").html(html);
+		}
+	});
+}
+
+function changeCampoIndicado() {
 	$(".psa_indicado").on("change",function() {
 		const SIM= 1;
 		const NAO = 2;
@@ -20,7 +37,9 @@ $(document).ready(function() {
 			$("#div_indicador").hide().find("input").attr("required",false);
 		}
 	});
+}
 
+function modalEditarPessoa() {
 	$(".tabela_pessoa tbody").on("click", ".btn_editar_pessoa", function() {
 		let iPsaId = $(this).data("target");
 
@@ -34,7 +53,9 @@ $(document).ready(function() {
 			}
 		});
 	});
+}
 
+function modalExcluirPessoa() {
 	$(".tabela_pessoa tbody").on("click", ".btn_excluir_pessoa", function() {
 		let iPsaId = $(this).data("target");
 
@@ -47,17 +68,5 @@ $(document).ready(function() {
 				$("#modalExcluirPessoa").html(html).modal("show");
 			}
 		});
-	});
-})
-
-function carregarPessoas() {
-	$.ajax({
-		url: "../pessoa/pessoaAjax",
-		type: "POST",
-		data: {sUrl:window.location.href},
-		dataType: "HTML",
-		success: function (html) {
-			$(".tabela_pessoa tbody").html(html);
-		}
 	});
 }

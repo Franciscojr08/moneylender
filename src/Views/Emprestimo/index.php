@@ -7,6 +7,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 /**
  * @var PessoaList $loPessoaList
+ * @var PessoaList $loFornecedorList
  * @var Pessoa $oPessoa
  */
 
@@ -21,12 +22,16 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 	<title>Controle de Empréstimos</title>
 	<?php
-	Functions::addFavicon();
-	Functions::addStyleSheet(["css/style.css"]);
+		Functions::addFavicon();
+		Functions::addStyleSheet(["css/style.css"]);
 	?>
 </head>
 <body>
 <?php Functions::renderMenu(); ?>
+
+<div style="margin: 1% 0 0 10%;">
+	<?php Functions::renderMensagem(true); ?>
+</div>
 
 <div class="content_cad_emprestimo">
 	<div class="cad_emp_info">
@@ -34,10 +39,10 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 		<p class="mb-4">Cadastre um empréstimo pessoal ou para um cliente.</p>
 
 		<h6>Beneficiário do Empréstimo</h6>
-		<input type="radio" checked id="pessoal" name="emo_tipo" class="emo_tipo" value="1">
-		<label for="pessoal" style="color: #fff; margin-right: 15px">Pessoal</label>
-		<input type="radio" id="cliente" name="emo_tipo" class="emo_tipo" value="2">
-		<label for="cliente" style="color: #fff;">Cliente</label><br>
+		<input type="radio" checked id="cliente" name="emo_tipo" class="emo_tipo" value="1">
+		<label for="cliente" style="color: #fff; margin-right: 15px">Cliente</label>
+		<input type="radio" id="pessoal" name="emo_tipo" class="emo_tipo" value="2">
+		<label for="pessoal" style="color: #fff;">Pessoal</label>
 
 		<h6 style="padding-top: 2rem;">Resumo do Empréstimo</h6>
 		<div>
@@ -46,7 +51,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 		</div>
 
 		<div>
-			<label class="label_emp_info" id="label_pessoa">Fornecedor</label>
+			<label class="label_emp_info" id="label_pessoa">Cliente</label>
 			<input class="input_emp_info input_pessoa" type="text" disabled>
 		</div>
 
@@ -86,33 +91,23 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 		<p class="mb-4">Todos os campos são obrigatórios.</p>
 
 		<form type="post" action="../emprestimo/cadastrar">
-			<input type="hidden" id="emo_tipo" name="emo_tipo" value="1">
+			<input type="hidden" id="emo_tipo" name="aEmprestimo[emo_tipo]" value="1">
 			<div class="div_emp_data">
-				<div id="fornecedor_emp" style="width: 54.5%;">
+				<div id="fornecedor_emp" style="display: none; width: 54.5%;">
 					<label>Fornecedor</label><br>
-					<select style="width: 100%;" id="fornecedor" name="fornecedor_id" class="select_emp_data" required>
+					<select style="width: 100%;" id="fornecedor" name="aEmprestimo[fornecedor_id]" class="select_emp_data">
 						<option selected style="display: none;" value="">Selecione o Fornecedor</option>
-						<?php
-							foreach ($loPessoaList as $oPessoa) {
-								if ($oPessoa->isCliente()) {
-									continue;
-								}
-						?>
+						<?php foreach ($loFornecedorList as $oPessoa) { ?>
 							<option value="<?php echo $oPessoa->getId(); ?>"><?php echo $oPessoa->getNome(); ?></option>
 						<?php } ?>
 					</select>
 				</div>
 
-				<div id="cliente_emp" style="display: none; width: 54.5%;">
+				<div id="cliente_emp" style="width: 54.5%;">
 					<label>Cliente</label><br>
-					<select  style="width: 100%;" id="cliente" class="select_emp_data" name="cliente_id">
+					<select style="width: 100%;" id="cliente" class="select_emp_data" name="aEmprestimo[cliente_id]" required>
 						<option selected style="display: none;" value="">Selecione o Cliente</option>
-						<?php
-						foreach ($loPessoaList as $oPessoa) {
-							if ($oPessoa->isFornecedor()) {
-								continue;
-							}
-							?>
+						<?php foreach ($loPessoaList as $oPessoa) { ?>
 							<option value="<?php echo $oPessoa->getId(); ?>"><?php echo $oPessoa->getNome(); ?></option>
 						<?php } ?>
 					</select>
@@ -120,14 +115,14 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 				<div style="width: 40.5%;  margin-left: 5%">
 					<label>Valor</label><br>
-					<input style="width: 100%;" type="text" min="0" id="emo_valor" name="emo_valor" placeholder="Valor" required>
+					<input style="width: 100%;" type="text" min="0" id="emo_valor" name="aEmprestimo[emo_valor]" placeholder="Valor" required>
 				</div>
 			</div>
 
 			<div class="div_emp_data">
 				<div style="width: 18.2%;">
 					<label>Juros</label><br>
-						<select class="select_emp_data" id="juros_emp" >
+						<select class="select_emp_data" id="juros_emp" name="aEmprestimo[taxa_juros]">
 						<?php foreach (SimNaoEnum::getValores() as $aValores) { ?>
 							<option value="<?php echo $aValores['valor']; ?>"><?php echo $aValores['descricao']; ?></option>
 						<?php } ?>
@@ -136,7 +131,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 				<div style="width: 32%; margin-left: 4%">
 					<label>Taxa Juros</label><br>
-					<input style="width: 100%;" type="number" min="0" id="emo_taxa_juros" name="emo_taxa_juros" placeholder="Taxa" required>
+					<input style="width: 100%;" type="number" step="0.01" min="0" id="emo_taxa_juros" name="aEmprestimo[emo_taxa_juros]" placeholder="Taxa" required>
 				</div>
 
 				<div style="width: 40.5%; margin-left: 5%">
@@ -148,7 +143,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 			<div class="div_emp_data">
 				<div style="width: 18.2%;">
 					<label>Parcelado</label><br>
-					<select class="select_emp_data" id="pagamento_emp" name="emo_pagamento_parcelado">
+					<select class="select_emp_data" id="pagamento_emp" name="aEmprestimo[emo_pagamento_parcelado]">
 						<?php foreach (SimNaoEnum::getValores() as $aValores) { ?>
 							<option value="<?php echo $aValores['valor']; ?>"><?php echo $aValores['descricao']; ?></option>
 						<?php } ?>
@@ -157,24 +152,24 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 				<div style="width: 32%; margin-left: 4%">
 					<label>QTD Parcelas</label><br>
-					<input style="width: 100%;" type="number" min="1" id="emo_quantidade_parcelas" name="emo_quantidade_parcelas" placeholder="Parcelas" required>
+					<input style="width: 100%;" type="number" min="1" id="emo_quantidade_parcelas" name="aEmprestimo[emo_quantidade_parcelas]" placeholder="Parcelas" required>
 				</div>
 
 				<div style="width: 40.5%; margin-left: 5%">
 					<label>Primeira Parcela</label><br>
-					<input style="width: 100%;" type="date" id="pra_data_previsao_pagamento" name="pra_data_previsao_pagamento" placeholder="Valor" required>
+					<input style="width: 100%;" type="date" id="pra_data_previsao_pagamento" name="aEmprestimo[pra_data_previsao_pagamento]" placeholder="Valor" required>
 				</div>
 			</div>
 
 			<div class="div_emp_data" style=" justify-content: space-between!important">
 				<div style="width: 54.5%;">
 					<label>Data Empréstimo</label><br>
-					<input style="width: 100%;" type="date" id="emo_data_emprestimo" name="emo_data_emprestimo" placeholder="Valor" required>
+					<input style="width: 100%;" type="date" id="emo_data_emprestimo" name="aEmprestimo[emo_data_emprestimo]" placeholder="Valor" required>
 				</div>
 
 				<div style="width: 40.5%;  margin-left: 5%">
 					<label>Previsão Pagamento</label><br>
-					<input style="width: 100%;" type="date" id="emo_data_previsao_pagamento" disabled name="emo_data_previsao_pagamento" placeholder="Valor">
+					<input style="width: 100%;" type="date" id="emo_data_previsao_pagamento" disabled name="aEmprestimo[emo_data_previsao_pagamento]" placeholder="Valor">
 				</div>
 			</div>
 

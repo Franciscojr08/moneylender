@@ -2,6 +2,11 @@
 
 namespace MoneyLender\Src\Controllers\Emprestimo;
 
+use MoneyLender\Core\Session;
+use MoneyLender\Src\Emprestimo\Emprestimo;
+use MoneyLender\Src\Pessoa\Pessoa;
+use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
+use MoneyLender\Src\Sistema\Enum\SituacaoEmprestimoEnum;
 use MoneyLender\Src\Sistema\Sistema;
 
 /**
@@ -23,8 +28,85 @@ class emprestimoController {
 	 */
 	public function index(array $aDados): void {
 		$loPessoaList = Sistema::PessoaDAO()->findAll();
+		$loFornecedorList = Sistema::PessoaDAO()->findAll(true);
 
 		require_once "Emprestimo/index.php";
 	}
 
+	/**
+	 * Cadastra um empréstimo
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function cadastrar(array $aDados ): void {
+		$aEmprestimo = $aDados['aEmprestimo'];
+
+		try {
+			$oEmprestimo = new Emprestimo();
+
+			if ($aEmprestimo['emo_tipo'] == Pessoa::CLIENTE) {
+				$oEmprestimo->setPessoaId($aEmprestimo['cliente_id']);
+			} elseif ($aEmprestimo['emo_tipo'] == Pessoa::FORNECEDOR) {
+				$oEmprestimo->setPessoaId($aEmprestimo['fornecedor_id']);
+			}
+
+			$fValor = str_replace(",",".",preg_replace("/[^0-9,]/", "", $aEmprestimo['emo_valor']));
+			$oEmprestimo->setValor($fValor);
+			$oEmprestimo->setValorPago(0.0);
+			$oEmprestimo->setValorJuros(0.0);
+			$oEmprestimo->setTaxaJuros(0);
+			$oEmprestimo->setValorDevido($fValor);
+			$oEmprestimo->setDataEmprestimo(new \DateTimeImmutable($aEmprestimo['emo_data_emprestimo']));
+			$oEmprestimo->setSituacao(SituacaoEmprestimoEnum::EM_ABERTO);
+
+			if (!empty($aEmprestimo['emo_taxa_juros'])) {
+				$fTaxaJuros = doubleval($aEmprestimo['emo_taxa_juros']);
+				$fValorJuros = ($fValor * ($fTaxaJuros / 100));
+				$fValorDevido = $fValor + $fValorJuros;
+
+				$oEmprestimo->setTaxaJuros($fTaxaJuros);
+				$oEmprestimo->setValorJuros($fValorJuros);
+				$oEmprestimo->setValorDevido($fValorDevido);
+			}
+
+			if ($aEmprestimo['emo_pagamento_parcelado'] != SimNaoEnum::NAO ) {
+				$oEmprestimo->setPagamentoParcelado(true);
+			}
+
+			if ($aEmprestimo['emo_pagamento_parcelado'] != SimNaoEnum::SIM && !empty($aEmprestimo['emo_data_previsao_pagamento'])) {
+				$oEmprestimo->setPagamentoParcelado(false);
+				$oEmprestimo->setDataPrevisaoPagamento(new \DateTimeImmutable($aEmprestimo['emo_data_previsao_pagamento']));
+			}
+
+			if (!$oEmprestimo->cadastrar($aEmprestimo)) {
+				throw new \Exception("Não foi possível cadastrar o empréstimo.");
+			}
+
+			Session::setMensagem("Empréstimo cadastrado com sucesso!", "sucesso");
+		} catch (\Exception $oExp) {
+			Session::setMensagem($oExp->getMessage(), "erro");
+		}
+
+		header("Location: ../emprestimo");
+	}
+
+	public function carregarModalEditarEmprestimo(array $aDados): void {
+		// TODO: Implementar método.
+	}
+
+	public function editarEmprestimo(array $aDados): void {
+		// TODO: Implementar método.
+	}
+
+	public function carregarModalExcluirEmprestimo(array $aDados): void {
+		// TODO: Implementar método.
+	}
+
+	public function excluirEmprestimo(array $aDados): void {
+		// TODO: Implementar método.
+	}
 }

@@ -6,7 +6,7 @@ use Exception;
 
 enum SituacaoParcelaEnum implements EnumInterface {
 
-	const EM_ABERTO = 1;
+	const EM_ABERTA = 1;
 	const PAGA = 2;
 	const CANCELADA = 3;
 
@@ -22,7 +22,7 @@ enum SituacaoParcelaEnum implements EnumInterface {
 		$aValores = [];
 
 		$aValores[] = [
-			'valor' => self::EM_ABERTO,
+			'valor' => self::EM_ABERTA,
 			'descricao' => "Em aberta"
 		];
 
@@ -38,7 +38,7 @@ enum SituacaoParcelaEnum implements EnumInterface {
 
 		return $aValores;
 	}
-	
+
 	/**
 	 * Retorna a descrição do enum com base no valor
 	 *
@@ -51,7 +51,7 @@ enum SituacaoParcelaEnum implements EnumInterface {
 	 */
 	public static function getDescricaoById(int $iValorEnum): string {
 		return match ($iValorEnum) {
-			self::EM_ABERTO => "Em aberta",
+			self::EM_ABERTA => "Em aberta",
 			self::PAGA => "Paga",
 			self::CANCELADA => "Cancelada",
 			default => throw new Exception("Tipo de arquivo não encontrado.")

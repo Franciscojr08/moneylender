@@ -22,15 +22,16 @@ interface PessoaDAOInterface {
 	public function find(int $iPsaId): Pessoa;
 
 	/**
-	 * Consulta todas as pessoas
+	 *Consulta todas as pessoas
 	 *
+	 * @param bool $bFiltrarFornecedor
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
 	 * @return PessoaList
 	 * @throws \Exception
 	 *
-	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(): PessoaList;
+	public function findAll(bool $bFiltrarFornecedor = false): PessoaList;
 
 	/**
 	 * Verifica se já existe o CPF cadastrado

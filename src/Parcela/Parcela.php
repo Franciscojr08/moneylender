@@ -14,10 +14,11 @@ class Parcela {
 	private float $fValorPago;
 	private float $fValorDevido;
 	private \DateTimeImmutable $oDataCadastro;
-	private \DateTimeImmutable $oDataPagamento;
+	private \DateTimeImmutable $oDataAtualizacao;
 	private \DateTimeImmutable $oDataPrevisaoPagamento;
 	private int $iSituacao;
-	private Emprestimo $oEmprestimo;
+	private int $iSequenciaParcela;
+	private int $oEmprestimoId;
 	private PagamentoList $loPagamentos;
 
 	/**
@@ -33,22 +34,17 @@ class Parcela {
 	public static function createFromArray(array $aDados): Parcela {
 		$oParcela = new Parcela();
 		$oParcela->iId = $aDados['pra_id'];
-		$oParcela->fValor = doubleval($aDados['pra_valor']);
+		$oParcela->fValor = floatval($aDados['pra_valor']);
+		$oParcela->fValorPago = floatval($aDados['pra_valor_pago']);
+		$oParcela->fValorDevido = floatval($aDados['pra_valor_devido']);
 		$oParcela->oDataCadastro = new \DateTimeImmutable($aDados['pra_data_cadastro']);
-		$oParcela->iSituacao = $aDados['pra_data_cadastro'];
-		$oParcela->oEmprestimo = Sistema::EmprestimoDAO()->find($aDados['emo_id']);
+		$oParcela->iSituacao = $aDados['pra_situacao'];
+		$oParcela->iSequenciaParcela = $aDados['pra_sequencia_parcela'];
+		$oParcela->oEmprestimoId = $aDados['emo_id'];
 		$oParcela->oDataPrevisaoPagamento = new \DateTimeImmutable($aDados['pra_data_previsao_pagamento']);
 
-		if (!empty($aDados['pra_valor_pago'])) {
-			$oParcela->fValorPago = doubleval($aDados['pra_valor_pago']);
-		}
-
-		if (!empty($aDados['pra_valor_devido'])) {
-			$oParcela->fValorPago = doubleval($aDados['pra_valor_devido']);
-		}
-
-		if (!empty($aDados['pra_data_pagamento'])) {
-			$oParcela->oDataPagamento = new \DateTimeImmutable($aDados['pra_data_pagamento']);
+		if (!empty($aDados['pra_data_atualizacao'])) {
+			$oParcela->oDataAtualizacao = new \DateTimeImmutable($aDados['pra_data_atualizacao']);
 		}
 
 		return $oParcela;
@@ -180,28 +176,27 @@ class Parcela {
 	}
 
 	/**
-	 * Retorna a data de pagamento
+	 * Retorna a data de atualização
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return \DateTimeImmutable
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getDataPagamento(): \DateTimeImmutable {
-		return $this->oDataPagamento;
+	public function getDataAtualizacao(): \DateTimeImmutable {
+		return $this->oDataAtualizacao;
 	}
 
 	/**
-	 * Atribui a data de pagamento
+	 * Retorna se possui atualização
 	 *
-	 * @param \DateTimeImmutable $oDataPagamento
 	 * @author Francisco Santos franciscojuniordh@gmail.com
-	 * @return void
+	 * @return bool
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function setDataPagamento(\DateTimeImmutable $oDataPagamento): void {
-		$this->oDataPagamento = $oDataPagamento;
+	public function hasAtualizacao(): bool {
+		return !empty($this->oDataAtualizacao);
 	}
 
 	/**
@@ -268,28 +263,54 @@ class Parcela {
 	}
 
 	/**
+	 * Retorna a sequencia da parcela
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getSequenciaParcela(): int {
+		return $this->iSequenciaParcela;
+	}
+
+	/**
+	 * Atribui a sequencia da parcela
+	 *
+	 * @param int $iSequenciaParcela
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function setSequenciaParcela(int $iSequenciaParcela): void {
+		$this->iSequenciaParcela = $iSequenciaParcela;
+	}
+
+	/**
 	 * Retorna o Empréstimo
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return Emprestimo
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getEmprestimo(): Emprestimo {
-		return $this->oEmprestimo;
+		return Sistema::EmprestimoDAO()->find($this->oEmprestimoId);
 	}
 
 	/**
 	 * Atribui o Empréstimo
 	 *
-	 * @param Emprestimo $oEmprestimo
+	 * @param int $oEmprestimoId
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function setEmprestimo(Emprestimo $oEmprestimo): void {
-		$this->oEmprestimo = $oEmprestimo;
+	public function setEmprestimo(int $oEmprestimoId): void {
+		$this->oEmprestimoId = $oEmprestimoId;
 	}
 
 	/**
@@ -329,4 +350,35 @@ class Parcela {
 		$this->loPagamentos = $loPagamentos;
 	}
 
+	/**
+	 * Cadastra uma parcela
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function cadastrar(): bool {
+		$this->oDataCadastro = new \DateTimeImmutable("now");
+
+		return Sistema::ParcelaDAO()->save($this);
+	}
+
+	/**
+	 * Atualiza uma parcela
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function atualizar(): void {
+		if ($this->fValorDevido == 0.0 && $this->fValorPago == $this->fValor) {
+			$this->iSituacao = SituacaoParcelaEnum::PAGA;
+		}
+
+		$this->oDataAtualizacao = new \DateTimeImmutable("now");
+		Sistema::ParcelaDAO()->update($this);
+	}
 }

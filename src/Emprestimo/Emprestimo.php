@@ -2,11 +2,14 @@
 
 namespace MoneyLender\Src\Emprestimo;
 
+use MoneyLender\Src\Pagamento\Pagamento;
 use MoneyLender\Src\Pagamento\PagamentoList;
+use MoneyLender\Src\Parcela\Parcela;
 use MoneyLender\Src\Parcela\ParcelaList;
 use MoneyLender\Src\Pessoa\Pessoa;
 use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 use MoneyLender\Src\Sistema\Enum\SituacaoEmprestimoEnum;
+use MoneyLender\Src\Sistema\Enum\SituacaoParcelaEnum;
 use MoneyLender\Src\Sistema\Sistema;
 
 /**
@@ -21,14 +24,16 @@ class Emprestimo {
 	private float $fValorPago;
 	private float $fValorDevido;
 	private float $fTaxaJuros;
+	private float $fValorJuros;
 	private \DateTimeImmutable $oDataEmprestimo;
 	private bool $bPagamentoParcelado;
 	private \DateTimeImmutable $oDataPagamentoEmprestimo;
 	private \DateTimeImmutable $oDataPrevisaoPagamento;
 	private int $iSituacao;
-	private Pessoa $oPessoa;
+	private int $iPessoaId;
 	private ParcelaList $loParcelas;
 	private PagamentoList $loPagamentos;
+	private \DateTimeImmutable $oDataCadastro;
 	private \DateTimeImmutable $oDataAtualizacao;
 
 	/**
@@ -44,14 +49,12 @@ class Emprestimo {
 	public static function createFromArray(mixed $aDados): Emprestimo {
 		$oEmprestimo = new Emprestimo();
 		$oEmprestimo->iId = $aDados['emo_id'];
-		$oEmprestimo->oPessoa = Sistema::PessoaDAO()->find($aDados['psa_id']);
+		$oEmprestimo->iPessoaId = $aDados['psa_id'];
 		$oEmprestimo->fValor = doubleval($aDados['emo_valor']);
-		$oEmprestimo->oDataEmprestimo = new \DateTimeImmutable($aDados['emo_data_emprestimo']);
 		$oEmprestimo->iSituacao = $aDados['emo_situacao'];
-
-		if (!empty($aDados['emo_valor_pago'])) {
-			$oEmprestimo->fValorPago = doubleval($aDados['emo_valor_pago']);
-		}
+		$oEmprestimo->oDataEmprestimo = new \DateTimeImmutable($aDados['emo_data_emprestimo']);
+		$oEmprestimo->oDataCadastro = new \DateTimeImmutable($aDados['emo_data_cadastro']);
+		$oEmprestimo->fValorPago = doubleval($aDados['emo_valor_pago']);
 
 		if (!empty($aDados['emo_valor_devido'])) {
 			$oEmprestimo->fValorDevido = doubleval($aDados['emo_valor_devido']);
@@ -61,16 +64,21 @@ class Emprestimo {
 			$oEmprestimo->fTaxaJuros = $aDados['emo_taxa_juros'];
 		}
 
-		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::NAO ) {
-			$oEmprestimo->bPagamentoParcelado = $aDados['emo_pagamento_parcelado'];
+		if (!empty($aDados['emo_taxa_juros']) && !empty($aDados['emo_valor_juros'])) {
+			$oEmprestimo->fValorJuros = $aDados['emo_valor_juros'];
 		}
 
-		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::NAO && !empty($aDados['emo_data_pagamento'])) {
+		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::NAO ) {
+			$oEmprestimo->bPagamentoParcelado = true;
+		}
+
+		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::SIM && !empty($aDados['emo_data_pagamento'])) {
 			$oEmprestimo->oDataPagamentoEmprestimo = $aDados['emo_data_pagamento'];
 		}
 
-		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::NAO && !empty($aDados['emo_data_previsao_pagamento'])) {
-			$oEmprestimo->oDataPrevisaoPagamento = $aDados['emo_data_previsao_pagamento'];
+		if ($aDados['emo_pagamento_parcelado'] != SimNaoEnum::SIM && !empty($aDados['emo_data_previsao_pagamento'])) {
+			$oEmprestimo->bPagamentoParcelado = false;
+			$oEmprestimo->oDataPrevisaoPagamento = new \DateTimeImmutable($aDados['emo_data_previsao_pagamento']);
 		}
 
 		if (!empty($aDados['emo_data_atualizacao'])) {
@@ -169,7 +177,9 @@ class Emprestimo {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getValorDevido(): float {
-		return $this->fValorDevido;
+		$fValorTotal = $this->getValor() + $this->getValorJuros();
+
+		return $fValorTotal - $this->fValorPago;
 	}
 
 	/**
@@ -220,6 +230,35 @@ class Emprestimo {
 	 */
 	public function setTaxaJuros(float $fTaxaJuros): void {
 		$this->fTaxaJuros = $fTaxaJuros;
+	}
+
+	/**
+	 * Retorna o valor do juros
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return float
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getValorJuros(): float {
+		if (!$this->hasTaxaJuros()) {
+			return 0.0;
+		}
+
+		return $this->fValorJuros;
+	}
+
+	/**
+	 * Atribui o valor do juros
+	 *
+	 * @param float $fValorJuros
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function setValorJuros(float $fValorJuros): void {
+		$this->fValorJuros = $fValorJuros;
 	}
 
 	/**
@@ -361,28 +400,29 @@ class Emprestimo {
 	}
 
 	/**
-	 * Retorna o cliente
+	 * Retorna a pessoa
 	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
 	 * @return Pessoa
+	 * @throws \Exception
 	 *
-	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getPessoa(): Pessoa {
-		return $this->oPessoa;
+		return Sistema::PessoaDAO()->find($this->iPessoaId);
 	}
 
 	/**
 	 * Atribui o client
 	 *
-	 * @param Pessoa $oPessoa
+	 * @param int $iPessoaId
 	 * @return void
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function setPessoa(Pessoa $oPessoa): void {
-		$this->oPessoa = $oPessoa;
+	public function setPessoaId(int $iPessoaId): void {
+		$this->iPessoaId = $iPessoaId;
 	}
 
 	/**
@@ -431,7 +471,7 @@ class Emprestimo {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function hasPagamentos(): bool {
-		return !empty($this->loPagamentos);
+		return $this->fValorPago > 0.0;
 	}
 
 	/**
@@ -448,22 +488,6 @@ class Emprestimo {
 	}
 
 	/**
-	 * Retorna o valor do juros
-	 *
-	 * @author Francisco Santos franciscojuniordh@gmail.com
-	 * @return float
-	 *
-	 * @since 1.0.0 - Definição do versionamento da classe
-	 */
-	public function getValorJuros(): float {
-		if ($this->fTaxaJuros == 0.00) {
-			return 0.00;
-		}
-
-		return ($this->fValor * ($this->fTaxaJuros / 100));
-	}
-
-	/**
 	 * Retorna o valor com a taxa de juros
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
@@ -472,11 +496,32 @@ class Emprestimo {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getValorComJuros(): float {
-		if ($this->fTaxaJuros == 0.00) {
-			return $this->fValor;
-		}
+		return $this->fValor + $this->getValorJuros();
+	}
 
-		return ($this->fValor + ($this->fValor * ($this->fTaxaJuros / 100)));
+	/**
+	 * Retorna a data de cadastro
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return \DateTimeImmutable
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getDataCadastro(): \DateTimeImmutable {
+		return $this->oDataCadastro;
+	}
+
+	/**
+	 * Atribui a data de cadastro
+	 *
+	 * @param \DateTimeImmutable $oDataCadastro
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function setDataCadastro(\DateTimeImmutable $oDataCadastro): void {
+		$this->oDataCadastro = $oDataCadastro;
 	}
 
 	/**
@@ -516,4 +561,165 @@ class Emprestimo {
 		$this->oDataAtualizacao = $oDataAtualizacao;
 	}
 
+	/**
+	 * Cadastra um empréstimo
+	 *
+	 * @param array $aEmprestimo
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function cadastrar(array $aEmprestimo): bool {
+		$this->oDataCadastro = new \DateTimeImmutable("now");
+		$bEmprestimoCadastrado = Sistema::EmprestimoDAO()->save($this);
+
+		if (!$bEmprestimoCadastrado) {
+			throw new \Exception("Não foi possível cadastrar o empréstimo.");
+		}
+
+		if ($this->isPagamentoParcelado()){
+			$bPrimeiraParcelaJaCadastrada = false;
+			$iQuantidadeParcelas = $aEmprestimo['emo_quantidade_parcelas'];
+			$fValorDevido = $this->getValorDevido();
+			$iValorMaximo = $fValorDevido;
+
+			$oPrimeiraParcela = new \DateTimeImmutable($aEmprestimo['pra_data_previsao_pagamento']);
+			$iDia = $oPrimeiraParcela->format("d");
+			$iMes = $oPrimeiraParcela->format("m");
+			$iAno = $oPrimeiraParcela->format("Y");
+
+			for ($i = 0; $i < $iQuantidadeParcelas; $i++) {
+				$fValorParcela = $this->calcularParcela($this->getValorDevido(),$iQuantidadeParcelas, $iValorMaximo);
+
+				$oParcela = new Parcela();
+				$oParcela->setEmprestimo($this->iId);
+				$oParcela->setValor($fValorParcela);
+				$oParcela->setValorDevido($fValorParcela);
+				$oParcela->setValorPago(0.0);
+				$oParcela->setSituacao(SituacaoParcelaEnum::EM_ABERTA);
+				$oParcela->setSequenciaParcela($i + 1);
+
+				if (!$bPrimeiraParcelaJaCadastrada) {
+					$oParcela->setDataPrevisaoPagamento($oPrimeiraParcela);
+					$bPrimeiraParcelaJaCadastrada = true;
+				} else {
+					$iMes++;
+					if ($iMes > 12) {
+						$iMes = 1;
+						$iAno++;
+					}
+
+					$sData = "$iAno/$iMes/$iDia";
+					$oParcela->setDataPrevisaoPagamento(new \DateTimeImmutable($sData));
+				}
+
+				if (!$oParcela->cadastrar()) {
+					throw new \Exception("Não foi possível cadastrar a parcela do empréstimo.");
+				}
+				$iValorMaximo -= $fValorParcela;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Atualiza um empréstimo
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function atualizar(): void {
+		if ($this->fValorDevido == 0.0 && $this->fValorPago == $this->getValorComJuros()) {
+			$this->iSituacao = SituacaoEmprestimoEnum::PAGO;
+		}
+
+		$this->oDataAtualizacao = new \DateTimeImmutable("now");
+		Sistema::EmprestimoDAO()->update($this);
+	}
+
+	/**
+	 * Lança o pagamento de um empréstimo
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function lancarPagamento(array $aDados): bool {
+		$aDados = array_merge($aDados,['emo_id' => $this->getId()]);
+		$fValorPagamento = floatval($aDados['pgo_valor']);
+		$this->validarPagamento($fValorPagamento);
+
+		$oPagamento = new Pagamento();
+		$oPagamento->setDataPagamento(new \DateTimeImmutable("now"));
+		$oPagamento->setFormaPagamento($aDados['pgo_forma_pagamento']);
+		$oPagamento->setValor($fValorPagamento);
+
+		if (!$oPagamento->cadastrar($aDados)) {
+			throw new \Exception("Não foi possível lançar o pagamento.");
+		}
+
+		$this->setValorDevido($this->getValorDevido() - $fValorPagamento);
+		$this->setValorPago($this->getValorPago() + $fValorPagamento);
+		$this->atualizar();
+
+		if ($this->isPagamentoParcelado()) {
+			$oParcela = Sistema::ParcelaDAO()->find($aDados['pra_id']);
+			$oParcela->setValorDevido( $oParcela->getValorDevido() - $fValorPagamento);
+			$oParcela->setValorPago($oParcela->getValorPago() + $fValorPagamento);
+			$oParcela->atualizar();
+		}
+
+		return true;
+	}
+
+	/**
+	 * Valida o valor do pagamento
+	 *
+	 * @param float $fValorPagamento
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	private function validarPagamento(float $fValorPagamento): void {
+		if ($fValorPagamento > $this->getValorDevido()) {
+			throw new \Exception("O valor do pagamento não pode ser maior que o valor devido.");
+		}
+
+		if ($fValorPagamento < 0.1) {
+			throw new \Exception("O valor do pagamento deve ser maior que zero.");
+		}
+	}
+
+	/**
+	 * Calcula o valor da parcela
+	 *
+	 * @param int $fValorEmprestimo
+	 * @param int $iNumeroParcelas
+	 * @param float $iValorMaximo
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return float
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	private function calcularParcela(int $fValorEmprestimo, int $iNumeroParcelas, float $iValorMaximo): float {
+		$fValorParcela = round($fValorEmprestimo / $iNumeroParcelas,2);
+
+		while ($fValorParcela > $iValorMaximo) {
+			$fValorParcela -= 0.01;
+			$fValorParcela = round($fValorParcela, 2);
+		}
+
+		return $fValorParcela;
+	}
 }

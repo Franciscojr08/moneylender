@@ -1,7 +1,6 @@
 <?php
 
 use MoneyLender\Core\Functions;
-use MoneyLender\Core\Session;
 
 ?>
 

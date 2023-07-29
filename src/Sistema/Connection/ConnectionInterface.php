@@ -77,4 +77,14 @@ interface ConnectionInterface {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getRow(string $sSql, array $aParams = null): array;
+
+	/**
+	 * Retorna o último Id inserido
+	 *
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getLasInsertId(): int;
 }

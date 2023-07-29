@@ -2,8 +2,10 @@
 
 namespace MoneyLender\Src\Emprestimo;
 
+use Exception;
 use MoneyLender\Src\Parcela\Parcela;
 use MoneyLender\Src\Pessoa\Pessoa;
+use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 use MoneyLender\Src\Sistema\Sistema;
 
 class EmprestimoDAO implements EmprestimoDAOInterface {
@@ -11,19 +13,27 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	/**
 	 * Consulta todos em empréstimos
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return EmprestimoList
-	 * @throws \Exception
+	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(): EmprestimoList {
-		$sSql = "SELECT * FROM emo_emprestimo";
+	public function findAll(bool $bFiltrarFornecedor = false): EmprestimoList {
+		$sInnerJoin = "INNER JOIN psa_pessoa psa on emo.psa_id = psa.psa_id and psa.psa_tipo = ?";
+		$aParam[] = $bFiltrarFornecedor ? Pessoa::FORNECEDOR : Pessoa::CLIENTE;
+
+		$sSql = "SELECT
+					*
+				FROM
+					emo_emprestimo emo
+				$sInnerJoin";
 
 		try {
-			$aaEmprestimos = Sistema::connection()->getArray($sSql);
+			$aaEmprestimos = Sistema::connection()->getArray($sSql,$aParam);
 		} catch (\PDOException $oExp) {
-			throw new \Exception("Não foi possível consultar os empréstimos.");
+			throw new Exception("Não foi possível consultar os empréstimos.");
 		}
 
 		if (empty($aaEmprestimos)) {
@@ -39,7 +49,7 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	 * @param int $iEmoId
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return Emprestimo
-	 * @throws \Exception
+	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
@@ -50,11 +60,11 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 		try {
 			$aEmprestimo = Sistema::connection()->getRow($sSql,$aParam);
 		} catch (\PDOException $oExp) {
-			throw new \Exception("Não foi possível consultar o empréstimo.");
+			throw new Exception("Não foi possível consultar o empréstimo.");
 		}
 
 		if (empty($aEmprestimo)) {
-			throw new \Exception("Nenhum empréstimo encontrado para a parcela.");
+			throw new Exception("Nenhum empréstimo encontrado..");
 		}
 
 		return Emprestimo::createFromArray($aEmprestimo);
@@ -65,7 +75,7 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	 *
 	 * @param Pessoa $oPessoa
 	 * @return EmprestimoList
-	 * @throws \Exception
+	 * @throws Exception
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -83,7 +93,7 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 		try {
 			$aaEmprestimos = Sistema::connection()->getArray($sSql,$aParam);
 		} catch (\PDOException $oExp) {
-			throw new \Exception("Não foi possível consultar os empréstimos do cliente.");
+			throw new Exception("Não foi possível consultar os empréstimos do cliente.");
 		}
 
 		if (empty($aaEmprestimos)) {
@@ -91,5 +101,118 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 		}
 
 		return EmprestimoList::createFromArray($aaEmprestimos);
+	}
+
+	/**
+	 * Cadastra um empréstimo
+	 *
+	 * @param Emprestimo $oEmprestimo
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function save(Emprestimo $oEmprestimo): bool {
+		$oConnection = Sistema::connection();
+		$oConnection->begin();
+		$bStatus = false;
+
+		try {
+			$sSql = "INSERT INTO emo_emprestimo (
+						psa_id,
+						emo_valor,
+						emo_valor_pago,
+						emo_valor_devido,
+						emo_taxa_juros,
+						emo_valor_juros,
+						emo_data_emprestimo,
+						emo_pagamento_parcelado,
+						emo_data_previsao_pagamento,
+						emo_situacao,
+						emo_data_cadastro)
+					VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
+			$aParams = [
+				$oEmprestimo->getPessoa()->getId(),
+				$oEmprestimo->getValor(),
+				$oEmprestimo->getValorPago(),
+				$oEmprestimo->getValorDevido(),
+				$oEmprestimo->hasTaxaJuros() ? $oEmprestimo->getTaxaJuros() : null,
+				$oEmprestimo->hasTaxaJuros() ? $oEmprestimo->getValorJuros() : null,
+				$oEmprestimo->getDataEmprestimo()->format("Y-m-d"),
+				$oEmprestimo->isPagamentoParcelado() ? SimNaoEnum::SIM : SimNaoEnum::NAO,
+				$oEmprestimo->isPagamentoParcelado() ? null : $oEmprestimo->getDataPrevisaoPagamento()->format("Y-m-d"),
+				$oEmprestimo->getSituacaoId(),
+				$oEmprestimo->getDataCadastro()->format("Y-m-d")
+			];
+
+			$bStatus = $oConnection->execute($sSql,$aParams);
+			$oEmprestimo->setId($oConnection->getLasInsertId());
+		} catch (\PDOException $oExp) {
+			$oConnection->rollBack();
+			throw new Exception("Não foi possível cadastrar o empréstimo.");
+		}
+
+		$oConnection->commit();
+		return $bStatus;
+	}
+
+	/**
+	 * Atualiza um empréstimo
+	 *
+	 * @param Emprestimo $oEmprestimo
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function update(Emprestimo $oEmprestimo): bool {
+		$oConnection = Sistema::connection();
+		$oConnection->begin();
+		$bStatus = false;
+
+		try {
+			$sSql = "UPDATE emo_emprestimo SET
+						psa_id = ?,
+						emo_valor = ?,
+						emo_valor_pago = ?,
+						emo_valor_devido = ?,
+						emo_taxa_juros = ?,
+						emo_valor_juros = ?,
+						emo_data_emprestimo = ?,
+						emo_pagamento_parcelado = ?,
+						emo_data_previsao_pagamento = ?,
+						emo_situacao = ?,
+						emo_data_cadastro = ?,
+						emo_data_atualizacao = ?
+					WHERE
+						emo_id = ?";
+
+			$aParams = [
+				$oEmprestimo->getPessoa()->getId(),
+				$oEmprestimo->getValor(),
+				$oEmprestimo->getValorPago(),
+				$oEmprestimo->getValorDevido(),
+				$oEmprestimo->hasTaxaJuros() ? $oEmprestimo->getTaxaJuros() : null,
+				$oEmprestimo->hasTaxaJuros() ? $oEmprestimo->getValorJuros() : null,
+				$oEmprestimo->getDataEmprestimo()->format("Y-m-d"),
+				$oEmprestimo->isPagamentoParcelado() ? SimNaoEnum::SIM : SimNaoEnum::NAO,
+				$oEmprestimo->isPagamentoParcelado() ? null : $oEmprestimo->getDataPrevisaoPagamento()->format("Y-m-d"),
+				$oEmprestimo->getSituacaoId(),
+				$oEmprestimo->getDataCadastro()->format("Y-m-d"),
+				$oEmprestimo->getDataAtualizacao()->format("Y-m-d"),
+				$oEmprestimo->getId()
+			];
+
+			$bStatus = $oConnection->execute($sSql,$aParams);
+		} catch (\PDOException $oExp) {
+			$oConnection->rollBack();
+			throw new Exception("Não foi possível atualizar o empréstimo.");
+		}
+
+		$oConnection->commit();
+		return $bStatus;
 	}
 }

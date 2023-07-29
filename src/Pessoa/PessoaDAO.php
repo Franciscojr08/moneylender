@@ -41,19 +41,21 @@ class PessoaDAO implements PessoaDAOInterface {
 	}
 
 	/**
-	 * Consulta todas as pessoas
+	 *Consulta todas as pessoas
 	 *
+	 * @param bool $bFiltrarFornecedor
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
 	 * @return PessoaList
 	 * @throws Exception
 	 *
-	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(): PessoaList {
-		$sSql = "SELECT * FROM psa_pessoa";
+	public function findAll(bool $bFiltrarFornecedor = false): PessoaList {
+		$sSql = "SELECT * FROM psa_pessoa WHERE psa_tipo = ?";
+		$aParam[] = $bFiltrarFornecedor ? Pessoa::FORNECEDOR : Pessoa::CLIENTE;
 
 		try {
-			$aaPessoas = Sistema::connection()->getArray($sSql);
+			$aaPessoas = Sistema::connection()->getArray($sSql,$aParam);
 		} catch (\PDOException $oExp) {
 			throw new Exception("Não foi possível consultar as pessoas.");
 		}
@@ -114,6 +116,7 @@ class PessoaDAO implements PessoaDAOInterface {
 			];
 
 			$bStatus = $oConnection->execute($sSql,$aParams);
+			$oPessoa->setId($oConnection->getLasInsertId());
 		} catch (\PDOException $oExp) {
 			$oConnection->rollBack();
 			throw new Exception("Não foi possível cadastrar a pessoa.");

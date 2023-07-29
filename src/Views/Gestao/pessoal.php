@@ -33,7 +33,7 @@ use MoneyLender\Core\Functions;
 			<th scope="col">Código</th>
 			<th scope="col">Data Emp.</th>
 			<th scope="col">Data Atl.</th>
-			<th scope="col">Cliente</th>
+			<th scope="col">Fornecedor</th>
 			<th scope="col">Valor</th>
 			<th scope="col">Juros (% / R$)</th>
 			<th scope="col">Valor Total</th>

@@ -3,6 +3,7 @@
 namespace MoneyLender\Src\Pagamento;
 
 use MoneyLender\Src\Sistema\Enum\FormaPagamentoEnum;
+use MoneyLender\Src\Sistema\Sistema;
 
 /**
  * Class Pagamento
@@ -149,4 +150,17 @@ class Pagamento {
 		$this->iFormaPagamento = $iFormaPagamento;
 	}
 
+	/**
+	 * Cadastra um pagamento
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function cadastrar(array $aDados): bool {
+		return Sistema::PagamentoDAO()->save($this, $aDados);
+	}
 }

@@ -47,12 +47,14 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor total investido
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getValorTotalInvestido(): float {
+	public function getValorTotalInvestido(bool $bFiltrarFornecedor = false): float {
 		$fValorTotalInvestido = 0.00;
 
 		if ($this->isEmpty()) {
@@ -61,6 +63,16 @@ class EmprestimoList extends \SplObjectStorage {
 
 		/** @var Emprestimo $oEmprestimo */
 		foreach ($this as $oEmprestimo) {
+			if ($bFiltrarFornecedor) {
+				if ($oEmprestimo->getPessoa()->isCliente()) {
+					continue;
+				}
+			} else {
+				if ($oEmprestimo->getPessoa()->isFornecedor()) {
+					continue;
+				}
+			}
+
 			$fValorTotalInvestido += $oEmprestimo->getValor();
 		}
 
@@ -70,12 +82,14 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor total recebido
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getValorTotalRecebido(): float {
+	public function getValorTotalRecebido(bool $bFiltrarFornecedor = false): float {
 		$fValorTotalRecebido = 0.00;
 
 		if ($this->isEmpty()) {
@@ -83,7 +97,15 @@ class EmprestimoList extends \SplObjectStorage {
 		}
 
 		/** @var Emprestimo $oEmprestimo */
+		/** @var Parcela $oParcela */
+
 		foreach ($this as $oEmprestimo) {
+			if ($bFiltrarFornecedor) {
+				if ($oEmprestimo->getPessoa()->isCliente()) {
+					continue;
+				}
+			}
+
 			if (!$oEmprestimo->hasPagamentos()) {
 				continue;
 			}
@@ -97,12 +119,14 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor total a receber
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getValorTotalAReceber(): float {
+	public function getValorTotalAReceber(bool $bFiltrarFornecedor = false): float {
 		$fValorTotalAReceber = 0.00;
 
 		if ($this->isEmpty()) {
@@ -110,7 +134,19 @@ class EmprestimoList extends \SplObjectStorage {
 		}
 
 		/** @var Emprestimo $oEmprestimo */
+		/** @var Parcela $oParcela */
+
 		foreach ($this as $oEmprestimo) {
+			if ($bFiltrarFornecedor) {
+				if ($oEmprestimo->getPessoa()->isCliente()) {
+					continue;
+				}
+			} else {
+				if ($oEmprestimo->getPessoa()->isFornecedor()) {
+					continue;
+				}
+			}
+
 			$fValorTotalAReceber += $oEmprestimo->getValorDevido();
 		}
 
@@ -120,15 +156,17 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor total atrasado
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getValorTotalAtrasado(): float {
+	public function getValorTotalAtrasado(bool $bFiltrarFornecedor = false): float {
 		$fValorTotalAtrasado = 0.00;
 		$oDataAtual = new \DateTimeImmutable("now");
-		$aSituacaoesEmprestimo = [SituacaoEmprestimoEnum::PAGO,SituacaoEmprestimoEnum::CANCELADO];
+		$aSituacaoesEmprestimo = [SituacaoEmprestimoEnum::PAGO];
 
 		if ($this->isEmpty()) {
 			return $fValorTotalAtrasado;
@@ -138,6 +176,16 @@ class EmprestimoList extends \SplObjectStorage {
 		/** @var Parcela $oParcela */
 
 		foreach ($this as $oEmprestimo) {
+			if ($bFiltrarFornecedor) {
+				if ($oEmprestimo->getPessoa()->isCliente()) {
+					continue;
+				}
+			} else {
+				if ($oEmprestimo->getPessoa()->isFornecedor()) {
+					continue;
+				}
+			}
+
 			if ($oEmprestimo->isPagamentoParcelado()) {
 				$loParcelas = $oEmprestimo->getParcelas();
 				if ($loParcelas->isEmpty()) {
@@ -146,11 +194,9 @@ class EmprestimoList extends \SplObjectStorage {
 
 				foreach ($loParcelas as $oParcela) {
 					$oDataPrevisaoPagamento = $oParcela->getDataPrevisaoPagamento();
-					$iSituacao = $oParcela->getSituacaoId();
+					$iSituacao = $oParcela->getSituacao();
 
-					if ($oDataPrevisaoPagamento < $oDataAtual &&
-						!in_array($iSituacao,$aSituacaoesEmprestimo) &&
-						!$oParcela->hasPagamentos()) {
+					if ($oDataPrevisaoPagamento < $oDataAtual && $iSituacao != $aSituacaoesEmprestimo) {
 						$fValorTotalAtrasado += $oParcela->getValorDevido();
 					}
 				}
@@ -158,9 +204,7 @@ class EmprestimoList extends \SplObjectStorage {
 				$oDataPrevisaoPagamento = $oEmprestimo->getDataPrevisaoPagamento();
 				$iSituacao = $oEmprestimo->getSituacaoId();
 
-				if ($oDataPrevisaoPagamento < $oDataAtual &&
-					!in_array($iSituacao,$aSituacaoesEmprestimo) &&
-					!$oEmprestimo->hasPagamentos()) {
+				if ($oDataPrevisaoPagamento < $oDataAtual && $iSituacao != $aSituacaoesEmprestimo) {
 					$fValorTotalAtrasado += $oEmprestimo->getValorDevido();
 				}
 			}
@@ -172,12 +216,14 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor total recebido dos juros
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getValorTotalJurosRecebido(): float {
+	public function getValorTotalJurosRecebido(bool $bFiltrarFornecedor = false): float {
 		$fValorTotalJurosRecebido = 0.00;
 
 		if ($this->isEmpty()) {
@@ -186,6 +232,16 @@ class EmprestimoList extends \SplObjectStorage {
 
 		/** @var Emprestimo $oEmprestimo */
 		foreach ($this as $oEmprestimo) {
+			if ($bFiltrarFornecedor) {
+				if ($oEmprestimo->getPessoa()->isCliente()) {
+					continue;
+				}
+			} else {
+				if ($oEmprestimo->getPessoa()->isFornecedor()) {
+					continue;
+				}
+			}
+
 			if (!$oEmprestimo->hasTaxaJuros() && !$oEmprestimo->hasPagamentos()) {
 				continue;
 			}
@@ -201,12 +257,14 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna o valor do juros a receber
 	 *
+	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return float
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function getValorTotalJurosAReceber(): float {
+	public function getValorTotalJurosAReceber(bool $bFiltrarFornecedor = false): float {
 		$fValorJurosAReceber = 0.00;
 
 		if ($this->isEmpty()) {
@@ -215,6 +273,16 @@ class EmprestimoList extends \SplObjectStorage {
 
 		/** @var Emprestimo $oEmprestimo */
 		foreach ($this as $oEmprestimo) {
+			if ($bFiltrarFornecedor) {
+				if ($oEmprestimo->getPessoa()->isCliente()) {
+					continue;
+				}
+			} else {
+				if ($oEmprestimo->getPessoa()->isFornecedor()) {
+					continue;
+				}
+			}
+
 			if (!$oEmprestimo->hasTaxaJuros() && !$oEmprestimo->hasPagamentos()) {
 				continue;
 			}
