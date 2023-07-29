@@ -37,7 +37,7 @@ class emprestimoController {
 	 * Cadastra um empréstimo
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -94,19 +94,51 @@ class emprestimoController {
 		header("Location: ../emprestimo");
 	}
 
-	public function carregarModalEditarEmprestimo(array $aDados): void {
-		// TODO: Implementar método.
-	}
-
-	public function editarEmprestimo(array $aDados): void {
-		// TODO: Implementar método.
-	}
-
+	/**
+	 * Carrega o modal de excluir empréstimo
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
 	public function carregarModalExcluirEmprestimo(array $aDados): void {
-		// TODO: Implementar método.
+		try {
+			$oEmprestimo = Sistema::EmprestimoDAO()->find($aDados['iEmoId']);
+
+			require_once "src/Views/Emprestimo/include/excluir.php";
+		} catch (\Exception $oExp) {
+			$sMensagem = $oExp->getMessage();
+
+			require_once "Sistema/modalExeption.php";
+		}
 	}
 
+	/**
+	 * Exclui um empréstimo
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
 	public function excluirEmprestimo(array $aDados): void {
-		// TODO: Implementar método.
+		$sAcao = $aDados['psa_tipo'];
+
+		try {
+			$oEmprestimo = Sistema::EmprestimoDAO()->find($aDados['emo_id']);
+
+			if (!$oEmprestimo->excluirEmprestimo()) {
+				throw new \Exception("Não foi possível lançar o pagamento.");
+			}
+
+			Session::setMensagem("Empréstimo deletado com sucesso.","sucesso");
+		} catch (\Exception $oExp) {
+			Session::setMensagem($oExp->getMessage(), "erro");
+		}
+
+		header("Location: ../gestao{$sAcao}");
 	}
 }

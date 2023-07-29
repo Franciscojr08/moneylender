@@ -52,7 +52,7 @@ interface EmprestimoDAOInterface {
 	 * Cadastra um empréstimo
 	 *
 	 * @param Emprestimo $oEmprestimo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws Exception
 	 *
@@ -64,11 +64,23 @@ interface EmprestimoDAOInterface {
 	 * Atualiza um empréstimo
 	 *
 	 * @param Emprestimo $oEmprestimo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function update(Emprestimo $oEmprestimo): bool;
+
+	/**
+	 * Apaga um empréstimo
+	 *
+	 * @param Emprestimo $oEmprestimo
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function delete(Emprestimo $oEmprestimo): bool;
 }

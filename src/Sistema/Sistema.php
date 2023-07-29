@@ -59,7 +59,7 @@ class Sistema {
 	/**
 	 * Retorna o DAO de pessoa
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return PessoaDAOInterface
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -71,7 +71,7 @@ class Sistema {
 	/**
 	 * Retorna o DAO de pagamento
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return PagamentoDAOInterface
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

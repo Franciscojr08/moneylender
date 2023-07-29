@@ -21,11 +21,11 @@ CREATE TABLE emo_emprestimo
 (
     emo_id                      SMALLINT unsigned PRIMARY KEY auto_increment,
     psa_id                      SMALLINT unsigned not null,
-    emo_valor                   DECIMAL(11,2)             NOT NULL,
-    emo_valor_pago              DECIMAL(11,2)             NULL,
-    emo_valor_devido            DECIMAL(11,2)             NULL,
-    emo_taxa_juros              DECIMAL(11,2)             NULL,
-    emo_valor_juros             DECIMAL(11,2)             NULL,
+    emo_valor                   DECIMAL(11, 2)    NOT NULL,
+    emo_valor_pago              DECIMAL(11, 2)    NULL,
+    emo_valor_devido            DECIMAL(11, 2)    NULL,
+    emo_taxa_juros              DECIMAL(11, 2)    NULL,
+    emo_valor_juros             DECIMAL(11, 2)    NULL,
     emo_data_emprestimo         DATE              NOT NULL,
     emo_pagamento_parcelado     TINYINT(1) DEFAULT 2,
     emo_data_previsao_pagamento DATE              NULL,
@@ -38,26 +38,13 @@ CREATE TABLE emo_emprestimo
 ALTER TABLE emo_emprestimo
     add constraint fk_emo_psa1 foreign key (psa_id) references psa_pessoa (psa_id);
 
-CREATE TABLE rco_recibo
-(
-    rco_id           SMALLINT unsigned PRIMARY KEY auto_increment,
-    psa_id           SMALLINT unsigned NOT NULL,
-    emo_id           SMALLINT unsigned NOT NULL,
-    rco_data_geracao date              NOT NULL
-);
-
-ALTER TABLE rco_recibo
-    ADD CONSTRAINT fk_rco_psa1 FOREIGN KEY (psa_id) REFERENCES psa_pessoa (psa_id);
-ALTER TABLE rco_recibo
-    ADD CONSTRAINT fk_rco_emo1 FOREIGN KEY (emo_id) REFERENCES emo_emprestimo (emo_id);
-
 CREATE TABLE pra_parcela
 (
     pra_id                      SMALLINT unsigned PRIMARY KEY auto_increment,
     emo_id                      SMALLINT unsigned NOT NULL,
-    pra_valor                   DECIMAL(11,2)             NOT NULL,
-    pra_valor_pago              DECIMAL(11,2)             NULL,
-    pra_valor_devido            DECIMAL(11,2)             NULL,
+    pra_valor                   DECIMAL(11, 2)    NOT NULL,
+    pra_valor_pago              DECIMAL(11, 2)    NULL,
+    pra_valor_devido            DECIMAL(11, 2)    NULL,
     pra_data_previsao_pagamento DATE              NOT NULL,
     pra_situacao                TINYINT(1)        NOT NULL,
     pra_sequencia_parcela       SMALLINT unsigned NOT NULL,
@@ -70,10 +57,10 @@ ALTER TABLE pra_parcela
 
 CREATE TABLE pgo_pagamento
 (
-    pgo_id               SMALLINT unsigned PRIMARY KEY auto_increment,
-    pgo_valor            DECIMAL(11,2)      NOT NULL,
-    pgo_forma_pagamento  tinyint(1) NOT NULL,
-    pgo_data_pagamento   DATE       NOT NULL
+    pgo_id              SMALLINT unsigned PRIMARY KEY auto_increment,
+    pgo_valor           DECIMAL(11, 2) NOT NULL,
+    pgo_forma_pagamento tinyint(1)     NOT NULL,
+    pgo_data_pagamento  DATE           NOT NULL
 );
 
 CREATE TABLE pgm_pagamento_emprestimo

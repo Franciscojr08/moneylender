@@ -265,7 +265,7 @@ class Parcela {
 	/**
 	 * Retorna a sequencia da parcela
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return int
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -278,7 +278,7 @@ class Parcela {
 	 * Atribui a sequencia da parcela
 	 *
 	 * @param int $iSequenciaParcela
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -353,7 +353,7 @@ class Parcela {
 	/**
 	 * Cadastra uma parcela
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
@@ -368,8 +368,9 @@ class Parcela {
 	/**
 	 * Atualiza uma parcela
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
@@ -380,5 +381,18 @@ class Parcela {
 
 		$this->oDataAtualizacao = new \DateTimeImmutable("now");
 		Sistema::ParcelaDAO()->update($this);
+	}
+
+	/**
+	 * Apaga uma parcela
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluir(): void {
+		Sistema::ParcelaDAO()->excluir($this);
 	}
 }

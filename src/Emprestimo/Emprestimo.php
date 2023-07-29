@@ -235,7 +235,7 @@ class Emprestimo {
 	/**
 	 * Retorna o valor do juros
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return float
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -252,7 +252,7 @@ class Emprestimo {
 	 * Atribui o valor do juros
 	 *
 	 * @param float $fValorJuros
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -402,7 +402,7 @@ class Emprestimo {
 	/**
 	 * Retorna a pessoa
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return Pessoa
 	 * @throws \Exception
 	 *
@@ -565,7 +565,7 @@ class Emprestimo {
 	 * Cadastra um empréstimo
 	 *
 	 * @param array $aEmprestimo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
@@ -628,7 +628,7 @@ class Emprestimo {
 	/**
 	 * Atualiza um empréstimo
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -647,7 +647,7 @@ class Emprestimo {
 	 * Lança o pagamento de um empréstimo
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
@@ -685,7 +685,7 @@ class Emprestimo {
 	 * Valida o valor do pagamento
 	 *
 	 * @param float $fValorPagamento
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -707,7 +707,7 @@ class Emprestimo {
 	 * @param int $fValorEmprestimo
 	 * @param int $iNumeroParcelas
 	 * @param float $fValorMaximo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return float
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -726,5 +726,35 @@ class Emprestimo {
 		}
 
 		return $fValorParcela;
+	}
+
+	/**
+	 * Apaga um empréstimo com seus pagamentos e parcelas (cascade)
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluirEmprestimo(): bool {
+		/** @var Pagamento $oPagamento */
+		/** @var Parcela $oParcela */
+
+		$loPagamentos = Sistema::PagamentoDAO()->findByEmprestimo($this);
+		if (!$loPagamentos->isEmpty()) {
+			foreach ($loPagamentos as $oPagamento) {
+				$oPagamento->excluir();
+			}
+		}
+
+		$loParcelas = Sistema::ParcelaDAO()->findByEmprestimo($this);
+		if (!$loParcelas->isEmpty()) {
+			foreach ($loParcelas as $oParcela) {
+				$oParcela->excluir();
+			}
+		}
+
+		return Sistema::EmprestimoDAO()->delete($this);
 	}
 }

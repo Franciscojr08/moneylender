@@ -90,8 +90,9 @@ nav ul li ul li a {
     background-color: #282b36;
     color: #fff;
     padding: 10px;
-    width: 14%;
+    width: 15%;
     font-size: 14px;
+    font-weight: bold;
     border-right: 5px solid #f57449;
     border-radius: 5px;
 }
@@ -363,5 +364,34 @@ input:focus, select:focus {
 }
 
 .inf_emprestimos span {
+    color: #fff;
+}
+
+.inf_pessoa {
+    width: 20%;
+    margin-right: 2%;
+    background-color: #212529;
+    color: #f57449;
+    padding: 5px;
+    border-bottom: 1px solid;
+    border-radius: 5px 5px 0 0;
+    float: right;
+}
+
+.inf_pessoa label {
+    font-weight: bold;
+    margin-left: 5%;
+}
+
+.inf_pessoa span {
+    color: #fff;
+    padding: 0;
+    background-color: #282b36;
+    font-weight: bold;
+}
+
+.inf_pessoa span:hover {
+    cursor: default;
+    background-color: #282b36;
     color: #fff;
 }

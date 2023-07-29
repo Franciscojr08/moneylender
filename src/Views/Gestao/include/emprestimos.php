@@ -75,12 +75,6 @@ use MoneyLender\Src\Sistema\Enum\SituacaoEmprestimoEnum;
 				<?php } ?>
 			</td>
 			<td>
-				<?php if (!$oEmprestimo->hasPagamentos()) { ?>
-					<a class="icon_acao editar btn_editar_emprestimo" data-target="<?php echo $oEmprestimo->getId(); ?>" title="Editar">
-						<i class="fa-solid fa-pen-to-square fa-lg" style="margin-right: 5px;"></i>
-					</a>
-				<?php } ?>
-
 				<a class="icon_acao excluir btn_excluir_emprestimo" data-target="<?php echo $oEmprestimo->getId(); ?>" title="Excluir">
 					<i class="fa-solid fa-trash fa-lg"></i>
 				</a>

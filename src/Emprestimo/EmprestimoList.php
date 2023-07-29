@@ -343,7 +343,7 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna a quantidade de empréstimos em aberto
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return int
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -364,7 +364,7 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna a quantidade de empréstimos atrasados
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return int
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -385,7 +385,7 @@ class EmprestimoList extends \SplObjectStorage {
 	/**
 	 * Retorna a quantidade de empréstimos pagos
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return int
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

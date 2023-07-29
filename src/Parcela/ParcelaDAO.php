@@ -43,7 +43,7 @@ class ParcelaDAO implements ParcelaDAOInterface {
 	 * @return bool
 	 * @throws Exception
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function save(Parcela $oParcela): bool {
@@ -89,7 +89,7 @@ class ParcelaDAO implements ParcelaDAOInterface {
 	 * Atualiza uma parcela
 	 *
 	 * @param Parcela $oParcela
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws Exception
 	 *
@@ -133,7 +133,7 @@ class ParcelaDAO implements ParcelaDAOInterface {
 	 * Consulta uma parcela pelo Id
 	 *
 	 * @param int $iPraId
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return Parcela
 	 * @throws Exception
 	 *
@@ -154,5 +154,34 @@ class ParcelaDAO implements ParcelaDAOInterface {
 		}
 
 		return Parcela::createFromArray($aParcela);
+	}
+
+	/**
+	 * Apaga uma parcela
+	 *
+	 * @param Parcela $oParcela
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluir(Parcela $oParcela): bool {
+		$oConnection = Sistema::connection();
+		$oConnection->begin();
+		$bStatus = false;
+
+		try {
+			$sSql = "DELETE FROM pra_parcela WHERE pra_id = ?";
+			$aParam[] = $oParcela->getId();
+
+			$bStatus = Sistema::connection()->execute($sSql,$aParam);
+		} catch (\PDOException $oExp) {
+			$oConnection->rollBack();
+			throw new \Exception("Não foi possível lançar o pagamento.");
+		}
+
+		$oConnection->commit();
+		return $bStatus;
 	}
 }

@@ -10,6 +10,7 @@ $(document).ready(function() {
 	carregarEmprestimos();
 	modalVisualizarPagamento();
 	modalLancarPagamento();
+	modalExcluirEmprestimo();
 })
 
 function carregarEmprestimos() {
@@ -57,6 +58,25 @@ function modalLancarPagamento() {
 			},
 			success: function (html) {
 				$("#modalLancarPagamentos").html(html).modal("show");
+			}
+		});
+	});
+}
+
+function modalExcluirEmprestimo() {
+	$(".tabela_emprestimo tbody").on("click", ".btn_excluir_emprestimo", function() {
+		let iEmoId = $(this).data("target");
+
+		$.ajax({
+			url: "../../emprestimo/carregarModalExcluirEmprestimo",
+			type: "POST",
+			dataType: "html",
+			data: {
+				iEmoId:iEmoId,
+				sUrl:window.location.href
+			},
+			success: function (html) {
+				$("#modalExcluirEmprestimo").html(html).modal("show");
 			}
 		});
 	});

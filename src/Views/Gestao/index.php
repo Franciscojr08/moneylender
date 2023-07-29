@@ -65,8 +65,6 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 
 <div class="modal fade" id="modalVisualizarPagamentos"></div>
 <div class="modal fade" id="modalLancarPagamentos"></div>
-
-<div class="modal fade" id="modalEditarEmprestimo"></div>
 <div class="modal fade" id="modalExcluirEmprestimo"></div>
 
 <?php Functions::renderFooter(); ?>

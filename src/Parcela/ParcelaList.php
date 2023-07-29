@@ -71,7 +71,7 @@ class ParcelaList extends \SplObjectStorage {
 	/**
 	 * Retorna o combo das parcelas não pagas
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return array
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -97,7 +97,7 @@ class ParcelaList extends \SplObjectStorage {
 	/**
 	 * Retorna se alguma parcela possui pagamentos
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

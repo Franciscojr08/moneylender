@@ -22,7 +22,7 @@ interface ParcelaDAOInterface {
 	 * Cadastra uma parcela
 	 *
 	 * @param Parcela $oParcela
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
@@ -34,7 +34,7 @@ interface ParcelaDAOInterface {
 	 * Consulta uma parcela pelo Id
 	 *
 	 * @param int $iPraId
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return Parcela
 	 * @throws \Exception
 	 *
@@ -46,11 +46,23 @@ interface ParcelaDAOInterface {
 	 * Atualiza uma parcela
 	 *
 	 * @param Parcela $oParcela
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function update(Parcela $oParcela);
+	public function update(Parcela $oParcela): bool;
+
+	/**
+	 * Apaga uma parcela
+	 *
+	 * @param Parcela $oParcela
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluir(Parcela $oParcela): bool;
 }

@@ -78,7 +78,7 @@ class Session {
 	/**
 	 * Retorna o tipo da mensagem
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return string
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

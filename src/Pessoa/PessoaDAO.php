@@ -44,7 +44,7 @@ class PessoaDAO implements PessoaDAOInterface {
 	 *Consulta todas as pessoas
 	 *
 	 * @param bool $bFiltrarFornecedor
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return PessoaList
 	 * @throws Exception
 	 *

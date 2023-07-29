@@ -20,14 +20,29 @@ class pessoaController {
 	 * @param array $aDados
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function cliente(array $aDados): void {
+		$loPessoaList = Sistema::PessoaDAO()->findAll();
+
 		require_once "Pessoa/cliente.php";
 	}
 
+	/**
+	 * Renderiza a view de fornecedor
+	 *
+	 * @param array $aDados
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
 	public function fornecedor(array $aDados): void {
+		$loPessoaList = Sistema::PessoaDAO()->findAll(true);
+
 		require_once "Pessoa/fornecedor.php";
 	}
 
@@ -154,7 +169,7 @@ class pessoaController {
 	 * Edita uma pessoa
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

@@ -86,7 +86,7 @@ class PagamentoDAO implements PagamentoDAOInterface {
 	 *
 	 * @param Pagamento $oPagamento
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
@@ -129,7 +129,7 @@ class PagamentoDAO implements PagamentoDAOInterface {
 	 *
 	 * @param array $aDados
 	 * @param Connection $oConnection
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -145,6 +145,63 @@ class PagamentoDAO implements PagamentoDAOInterface {
 			];
 
 			$bStatus = $oConnection->execute($sSql,$aParams);
+			if (!$bStatus) {
+				throw new \Exception("Não foi possível lançar o pagamento.");
+			}
+		} catch (\PDOException $oExp) {
+			$oConnection->rollBack();
+			throw new \Exception("Não foi possível lançar o pagamento.");
+		}
+	}
+
+	/**
+	 * Apaga um pagamento
+	 *
+	 * @param Pagamento $oPagamento
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluir(Pagamento $oPagamento): bool {
+		$oConnection = Sistema::connection();
+		$oConnection->begin();
+		$bStatus = false;
+
+		try {
+			$this->deleteToTablePagamentoAux($oPagamento,$oConnection);
+
+			$sSql = "DELETE FROM pgo_pagamento WHERE pgo_id = ?";
+			$aParam[] = $oPagamento->getId();
+
+			$bStatus = $oConnection->execute($sSql,$aParam);
+		} catch (\PDOException $oExp) {
+			$oConnection->rollBack();
+			throw new \Exception("Não foi possível lançar o pagamento.");
+		}
+
+		$oConnection->commit();
+		return $bStatus;
+	}
+
+	/**
+	 * Apaga os pagamentos da tabela auxiliar
+	 *
+	 * @param Pagamento $oPagamento
+	 * @param Connection $oConnection
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	private function deleteToTablePagamentoAux(Pagamento $oPagamento, Connection &$oConnection): void {
+		try {
+			$sSql = "DELETE FROM pgm_pagamento_emprestimo WHERE pgo_id = ?";
+			$aParam[] = $oPagamento->getId();
+
+			$bStatus = $oConnection->execute($sSql,$aParam);
 			if (!$bStatus) {
 				throw new \Exception("Não foi possível lançar o pagamento.");
 			}

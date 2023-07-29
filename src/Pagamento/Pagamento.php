@@ -154,7 +154,7 @@ class Pagamento {
 	 * Cadastra um pagamento
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws \Exception
 	 *
@@ -162,5 +162,18 @@ class Pagamento {
 	 */
 	public function cadastrar(array $aDados): bool {
 		return Sistema::PagamentoDAO()->save($this, $aDados);
+	}
+
+	/**
+	 * Apaga um pagamento
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function excluir(): void {
+		Sistema::PagamentoDAO()->excluir($this);
 	}
 }

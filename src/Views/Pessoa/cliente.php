@@ -1,7 +1,9 @@
 <?php
 
 use MoneyLender\Core\Functions;
+use MoneyLender\Src\Pessoa\PessoaList;
 
+/** @var PessoaList $loPessoaList */
 ?>
 
 <!doctype html>
@@ -25,11 +27,16 @@ use MoneyLender\Core\Functions;
 		<h3>Clientes</h3>
 	</div>
 
-	<div class="div_cad_pessoa" style="display: block!important;">
+	<div class="div_cad_pessoa" style="display: block!important; margin-bottom: 2.5rem;">
 		<?php Functions::renderMensagem(); ?>
 
 		<span style="float: right" data-bs-toggle="modal" data-bs-target="#exampleModal">Cadastrar <i class="fa-solid fa-user-plus" style="margin-left: 5px"></i></span>
 	</div>
+
+	<div class="inf_pessoa">
+		<label>Clientes: <span><?php echo $loPessoaList->count(); ?></span></label>
+	</div>
+
 	<table class="table table-striped tabela_pessoa" style="margin-top: 2.3rem">
 		<thead>
 		<tr class="table-dark">

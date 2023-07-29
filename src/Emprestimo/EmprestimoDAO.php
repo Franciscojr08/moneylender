@@ -107,7 +107,7 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	 * Cadastra um empréstimo
 	 *
 	 * @param Emprestimo $oEmprestimo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws Exception
 	 *
@@ -162,7 +162,7 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	 * Atualiza um empréstimo
 	 *
 	 * @param Emprestimo $oEmprestimo
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 * @throws Exception
 	 *
@@ -215,4 +215,35 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 		$oConnection->commit();
 		return $bStatus;
 	}
+
+	/**
+	 * Apaga um empréstimo
+	 *
+	 * @param Emprestimo $oEmprestimo
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
+	 * @return bool
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function delete(Emprestimo $oEmprestimo): bool {
+		$oConnection = Sistema::connection();
+		$oConnection->begin();
+		$bStatus = false;
+
+		try {
+			$sSql = "DELETE FROM emo_emprestimo WHERE emo_id = ?";
+			$aParam[] = $oEmprestimo->getId();
+			
+			$bStatus = Sistema::connection()->execute($sSql,$aParam);
+		} catch (\PDOException $oExp) {
+			$oConnection->rollBack();
+			throw new \Exception("Não foi possível lançar o pagamento.");
+		}
+
+		$oConnection->commit();
+		return $bStatus;
+	}
+	
+	
 }

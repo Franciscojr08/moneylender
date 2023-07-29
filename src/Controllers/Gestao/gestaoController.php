@@ -33,7 +33,7 @@ class gestaoController {
 	 * Renderiza a view da home dos empréstimos dos clientes
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -69,7 +69,7 @@ class gestaoController {
 	 * Carrega o modal de visualizar os pagamentos
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -99,7 +99,7 @@ class gestaoController {
 	 * Carrega o modal de lançar pagamento
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -127,7 +127,7 @@ class gestaoController {
 	 * Lança o pagamento do empréstimo
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -155,7 +155,7 @@ class gestaoController {
 	 * Consulta as informações da parcela
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -184,7 +184,7 @@ class gestaoController {
 	 * Retorna se ação é para o fornecedor
 	 *
 	 * @param array $aDados
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return bool
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
