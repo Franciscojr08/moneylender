@@ -33,6 +33,10 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 		<?php Functions::renderMensagem(true, 98); ?>
 	</div>
 
+	<div class="filtros_emprestimo">
+		<?php require_once "Gestao/filtros_emprestimo.php"; ?>
+	</div>
+
 	<div class="inf_emprestimos">
 		<label>Empréstimos: <span><?php echo $loEmprestimos->count(); ?></span></label>
 		<label>Em Aberto: <span><?php echo $loEmprestimos->getQuantidadeEmAberto(); ?></span></label>
@@ -48,10 +52,10 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 			<th scope="col">Data Atl.</th>
 			<th scope="col">Fornecedor</th>
 			<th scope="col">Valor</th>
-			<th scope="col">Juros (% / R$)</th>
+			<th scope="col">Juros</th>
 			<th scope="col">Valor Total</th>
 			<th scope="col">Devido / Pago</th>
-			<th scope="col">Parcelas / Pagas</th>
+			<th scope="col">Parcelas</th>
 			<th scope="col">Situação</th>
 			<th scope="col">Prev. PG</th>
 			<th scope="col" title="Pagamentos"><i class="fa-solid fa-money-bill-trend-up fa-lg"></i></th>

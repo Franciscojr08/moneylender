@@ -15,14 +15,14 @@ interface EmprestimoDAOInterface {
 	/**
 	 * Consulta todos em empréstimos
 	 *
-	 * @param bool $bFiltrarFornecedor
+	 * @param array $aDados
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return EmprestimoList
 	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(bool $bFiltrarFornecedor = false): EmprestimoList;
+	public function findAll(array $aDados): EmprestimoList;
 
 	/**
 	 * Consulta um empréstimo pelo Id

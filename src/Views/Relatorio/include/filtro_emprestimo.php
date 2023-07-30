@@ -47,8 +47,7 @@
 </div>
 
 <div style="width: 54.5%; padding-bottom: 2rem;">
-	<label>Data Recibo</label><br>
-	<input style="width: 100%;" type="date" id="emo_data_previsao_pagamento" name="emo_data_previsao_pagamento"
-	       placeholder="Valor">
+	<label>Data Emprestimo</label><br>
+	<input style="width: 100%;" type="date" id="emo_data_previsao_pagamento" name="emo_data_previsao_pagamento">
 </div>
 

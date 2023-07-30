@@ -23,7 +23,8 @@ class gestaoController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function pessoal(array $aDados): void {
-		$loEmprestimos = Sistema::EmprestimoDAO()->findAll(true);
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados,true);
+		$loEmprestimos = Sistema::EmprestimoDAO()->findAll($aDados);
 		$bFiltrarFornecedor = true;
 
 		require_once "Gestao/pessoal.php";
@@ -40,7 +41,8 @@ class gestaoController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function index(array $aDados): void {
-		$loEmprestimos = Sistema::EmprestimoDAO()->findAll();
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados,false);
+		$loEmprestimos = Sistema::EmprestimoDAO()->findAll($aDados);
 		$bFiltrarFornecedor = false;
 
 		require_once "Gestao/index.php";
@@ -59,8 +61,9 @@ class gestaoController {
 	public function emprestimoAjax(array $aDados): void {
 		$aUrl = explode("/",$aDados['sUrl']);
 		$bFiltrarFornecedor = end($aUrl) == "pessoal";
+		$aDados['filtrar_fornecedor'] = $bFiltrarFornecedor;
 
-		$loEmprestimos = Sistema::EmprestimoDAO()->findAll($bFiltrarFornecedor);
+		$loEmprestimos = Sistema::EmprestimoDAO()->findAll($aDados);
 
 		require_once "Gestao/include/emprestimos.php";
 	}

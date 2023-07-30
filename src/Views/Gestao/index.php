@@ -2,8 +2,11 @@
 
 use MoneyLender\Core\Functions;
 use MoneyLender\Src\Emprestimo\EmprestimoList;
+use MoneyLender\Src\Pessoa\PessoaList;
 
+/** @var PessoaList $loPessoaList */
 /** @var EmprestimoList $loEmprestimos */
+/** @var bool $bFiltrarFornecedor */
 ?>
 
 <!doctype html>
@@ -31,6 +34,10 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 
 	<div style="margin: 0 0 0 2%;">
 		<?php Functions::renderMensagem(true, 98); ?>
+	</div>
+
+	<div class="filtros_emprestimo">
+		<?php require_once "Gestao/filtros_emprestimo.php"; ?>
 	</div>
 
 	<div class="inf_emprestimos">

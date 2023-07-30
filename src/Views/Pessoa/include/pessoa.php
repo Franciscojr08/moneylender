@@ -34,7 +34,7 @@ $sTipoPessoa = $bFiltrarFornecedor ? "fornecedor" : "cliente";
 			<td><?php echo $oPessoa->hasEmail() ? $oPessoa->getEmail() : "- - -"; ?></td>
 			<td><?php echo $oPessoa->hasTelefone() ? $oPessoa->getTelefoneComMascara() : "- - -"; ?></td>
 			<td><?php echo $oPessoa->isIndicado() ? "Sim" : "Não"; ?></td>
-			<td><?php echo $oPessoa->isIndicado() ? $oPessoa->getNomeIndicador() : "Não"; ?></td>
+			<td><?php echo $oPessoa->isIndicado() ? $oPessoa->getNomeIndicador() : "- - -"; ?></td>
 			<td><?php echo $oPessoa->hasEmprestimos() ? $oPessoa->getEmprestimos()->count() : "Não"; ?></td>
 			<td><?php echo $oPessoa->getDataCadastro()->format("d/m/Y"); ?></td>
 			<td><?php echo $oPessoa->hasAtualizacao() ? $oPessoa->getDataAtualizacao()->format("d/m/Y") : "- - -"; ?></td>

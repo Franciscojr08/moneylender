@@ -27,8 +27,8 @@ class emprestimoController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function index(array $aDados): void {
-		$loPessoaList = Sistema::PessoaDAO()->findAll();
-		$loFornecedorList = Sistema::PessoaDAO()->findAll(true);
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados, false);
+		$loFornecedorList = Sistema::PessoaDAO()->findAll($aDados,true);
 
 		require_once "Emprestimo/index.php";
 	}

@@ -24,6 +24,7 @@ interface PessoaDAOInterface {
 	/**
 	 *Consulta todas as pessoas
 	 *
+	 * @param array $aDados
 	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return PessoaList
@@ -31,7 +32,7 @@ interface PessoaDAOInterface {
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(bool $bFiltrarFornecedor = false): PessoaList;
+	public function findAll(array $aDados, bool $bFiltrarFornecedor): PessoaList;
 
 	/**
 	 * Verifica se já existe o CPF cadastrado

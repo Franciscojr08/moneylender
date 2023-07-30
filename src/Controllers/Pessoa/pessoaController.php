@@ -25,7 +25,8 @@ class pessoaController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function cliente(array $aDados): void {
-		$loPessoaList = Sistema::PessoaDAO()->findAll();
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados,false);
+		$bFiltrarFornecedor = false;
 
 		require_once "Pessoa/cliente.php";
 	}
@@ -41,7 +42,8 @@ class pessoaController {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function fornecedor(array $aDados): void {
-		$loPessoaList = Sistema::PessoaDAO()->findAll(true);
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados,true);
+		$bFiltrarFornecedor = true;
 
 		require_once "Pessoa/fornecedor.php";
 	}
@@ -59,7 +61,7 @@ class pessoaController {
 	public function pessoaAjax(array $aDados): void {
 		$aUrl = explode("/",$aDados['sUrl']);
 		$bFiltrarFornecedor = end($aUrl) == "fornecedor";
-		$loPessoaList = Sistema::PessoaDAO()->findAll($bFiltrarFornecedor);
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados,$bFiltrarFornecedor);
 
 		require_once "Pessoa/include/pessoa.php";
 	}

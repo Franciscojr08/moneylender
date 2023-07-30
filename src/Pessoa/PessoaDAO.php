@@ -43,6 +43,7 @@ class PessoaDAO implements PessoaDAOInterface {
 	/**
 	 *Consulta todas as pessoas
 	 *
+	 * @param array $aDados
 	 * @param bool $bFiltrarFornecedor
 	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return PessoaList
@@ -50,12 +51,55 @@ class PessoaDAO implements PessoaDAOInterface {
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(bool $bFiltrarFornecedor = false): PessoaList {
-		$sSql = "SELECT * FROM psa_pessoa WHERE psa_tipo = ?";
-		$aParam[] = $bFiltrarFornecedor ? Pessoa::FORNECEDOR : Pessoa::CLIENTE;
+	public function findAll(array $aDados, bool $bFiltrarFornecedor): PessoaList {
+		$aFiltros = $aDados['aFiltro'] ?? [];
+		$aParams = [];
+
+		$sSql = "SELECT
+					psa.*
+				FROM
+					psa_pessoa psa
+				WHERE
+					psa_tipo = ?";
+
+		$aParams[] = $bFiltrarFornecedor ? Pessoa::FORNECEDOR : Pessoa::CLIENTE;
+
+		if (!empty($aFiltros['iPsaId'])) {
+			$sSql .= " AND psa.psa_id = ?";
+			$aParams[] = $aFiltros['iPsaId'];
+		}
+
+		if (!empty($aFiltros['sDataCadastro'])) {
+			$sSql .= " AND psa.psa_data_cadastro = ?";
+			$aParams[] = $aFiltros['sDataCadastro'];
+		}
+
+		if (isset($aFiltros['iEmprestimo']) && $aFiltros['iEmprestimo'] == SimNaoEnum::SIM) {
+			$sSql .= " AND EXISTS (select 1 from emo_emprestimo emo where emo.psa_id = psa.psa_id)";
+		} else if (isset($aFiltros['iEmprestimo']) && $aFiltros['iEmprestimo'] == SimNaoEnum::NAO) {
+			$sSql .= " AND NOT EXISTS (select 1 from emo_emprestimo emo where emo.psa_id = psa.psa_id)";
+		}
+
+		if (!empty($aFiltros['iIndicado'])) {
+			$iIndicado = $aFiltros['iIndicado'];
+
+			if ($iIndicado == SimNaoEnum::SIM && !empty($aFiltros['sNomeIndicador'])) {
+				$sNomeIndicador = "%" . trim($aFiltros['sNomeIndicador']) . "%";
+
+				$sSql .= " AND psa.psa_indicado = ?";
+				$sSql .= " AND psa.psa_nome_indicador like ?";
+				$aParams[] = $iIndicado;
+				$aParams[] = $sNomeIndicador;
+			} else if ($iIndicado == SimNaoEnum::NAO) {
+				$sSql .= " AND psa.psa_indicado = ?";
+				$aParams[] = $iIndicado;
+			}
+		}
+
+		$sSql .= " ORDER BY psa.psa_nome, psa.psa_data_cadastro";
 
 		try {
-			$aaPessoas = Sistema::connection()->getArray($sSql,$aParam);
+			$aaPessoas = Sistema::connection()->getArray($sSql,$aParams);
 		} catch (\PDOException $oExp) {
 			throw new Exception("Não foi possível consultar as pessoas.");
 		}

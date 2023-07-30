@@ -27,10 +27,14 @@ use MoneyLender\Src\Pessoa\PessoaList;
 		<h3>Fornecedores</h3>
 	</div>
 
-	<div class="div_cad_pessoa" style="display: block!important; margin-bottom: 2.5rem;">
+	<div class="div_cad_pessoa" style="display: block!important; margin-bottom: 2rem;">
 		<?php Functions::renderMensagem(); ?>
 
 		<span style="float: right" data-bs-toggle="modal" data-bs-target="#exampleModal">Cadastrar <i class="fa-solid fa-user-plus" style="margin-left: 5px"></i></span>
+	</div>
+
+	<div class="filtros_emprestimo">
+		<?php require_once "Pessoa/include/filros_pessoa.php"; ?>
 	</div>
 
 	<div class="inf_pessoa">
@@ -64,6 +68,18 @@ use MoneyLender\Src\Pessoa\PessoaList;
 		require_once "Pessoa/include/cadastrar.php";
 		?>
 	</form>
+</div>
+
+<div class="toast-container position-fixed bottom-0 p-3">
+	<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header" style="background: #ff0000; color: #ffff; font-weight: bold;">
+			<strong class="me-auto">ATENÇÃO!</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body">
+			Preencha o nome do indicador!
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="modalEditarPessoa"></div>

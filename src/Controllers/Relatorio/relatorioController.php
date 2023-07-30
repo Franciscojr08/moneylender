@@ -12,7 +12,7 @@ use MoneyLender\Src\Sistema\Sistema;
 class relatorioController {
 
 	public function index(array $aDados): void {
-		$loPessoaList = Sistema::PessoaDAO()->findAll();
+		$loPessoaList = Sistema::PessoaDAO()->findAll($aDados,true);
 
 		require_once "Relatorio/index.php";
 	}

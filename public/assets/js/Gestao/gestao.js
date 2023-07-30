@@ -11,6 +11,8 @@ $(document).ready(function() {
 	modalVisualizarPagamento();
 	modalLancarPagamento();
 	modalExcluirEmprestimo();
+	filtrarEmprestimoAjax();
+	limparFiltroEmprestimo();
 })
 
 function carregarEmprestimos() {
@@ -79,5 +81,54 @@ function modalExcluirEmprestimo() {
 				$("#modalExcluirEmprestimo").html(html).modal("show");
 			}
 		});
+	});
+}
+
+function filtrarEmprestimoAjax() {
+	$(".btn_filtrar_emprestimo").click(function() {
+		let iPsaId = $(".psa_id_filtro").val();
+		let sDataEmprestimo = $(".emo_data_emprestimo_filtro").val();
+		let iJuros = $(".emo_juros_filtro:checked").val();
+		let iParcelado = $(".emo_parcelado_filtro:checked").val();
+		let aSituacaoId = [];
+		$(".emo_situacao_filtro:checked").each(function() {
+			aSituacaoId.push($(this).val());
+		});
+
+		let aFiltro = {
+			iPsaId: iPsaId,
+			sDataEmprestimo: sDataEmprestimo,
+			iJuros: iJuros,
+			iParcelado: iParcelado,
+			aSituacaoId: aSituacaoId
+		}
+
+		$.ajax({
+			url: "../gestao/emprestimoAjax",
+			data: {
+				aFiltro:aFiltro,
+				sUrl: window.location.href
+			},
+			type: "POST",
+			dataType: "HTML",
+			success: function (html) {
+				$(".tabela_emprestimo tbody").html("");
+				$(".tabela_emprestimo tbody").html(html);
+			}
+		});
+	});
+}
+
+function limparFiltroEmprestimo() {
+	$(".btn_limpar_filtro_emprestimo").click(function() {
+		$(".psa_id_filtro option:first").prop("selected",true);
+		$(".emo_data_emprestimo_filtro").val("");
+		$(".emo_juros_filtro:checked").prop("checked",false);
+		$(".emo_parcelado_filtro:checked").prop("checked",false);;
+		$(".emo_situacao_filtro:checked").each(function() {
+			$(this).prop("checked",false);
+		});
+
+		carregarEmprestimos();
 	});
 }

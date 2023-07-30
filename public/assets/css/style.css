@@ -395,3 +395,25 @@ input:focus, select:focus {
     background-color: #282b36;
     color: #fff;
 }
+
+.filtros_emprestimo {
+    width: 96%;
+    margin: 0 auto 2% auto;
+}
+
+.filtros_emprestimo fieldset {
+    border: 1px solid #aaa;
+    padding: 1px 12px 15px 20px;
+}
+
+.filtros_emprestimo legend {
+    float: inherit;
+    font-size: 18px;
+    padding: 4px 0;
+    border: 1px solid #aaa;
+    width: 6%;
+    text-align: -webkit-center;
+    background-color: #282b36;
+    font-weight: bold;
+    color: #f57449;
+}

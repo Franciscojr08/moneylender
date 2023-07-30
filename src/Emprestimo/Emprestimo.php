@@ -696,7 +696,7 @@ class Emprestimo {
 			throw new \Exception("O valor do pagamento não pode ser maior que o valor devido.");
 		}
 
-		if ($fValorPagamento < 0.1) {
+		if ($fValorPagamento < 0.01) {
 			throw new \Exception("O valor do pagamento deve ser maior que zero.");
 		}
 	}
@@ -704,7 +704,7 @@ class Emprestimo {
 	/**
 	 * Calcula o valor da parcela
 	 *
-	 * @param int $fValorEmprestimo
+	 * @param float $fValorEmprestimo
 	 * @param int $iNumeroParcelas
 	 * @param float $fValorMaximo
 	 * @author Francisco Santos franciscojuniordh@gmail.com.br
@@ -712,7 +712,7 @@ class Emprestimo {
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	private function calcularParcela(int $fValorEmprestimo, int $iNumeroParcelas, float $fValorMaximo): float {
+	private function calcularParcela(float $fValorEmprestimo, int $iNumeroParcelas, float $fValorMaximo): float {
 		$fValorParcela = round($fValorEmprestimo / $iNumeroParcelas,2);
 		$fValorMaximo = round($fValorMaximo,2);
 

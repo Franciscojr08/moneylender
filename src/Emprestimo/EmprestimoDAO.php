@@ -13,25 +13,66 @@ class EmprestimoDAO implements EmprestimoDAOInterface {
 	/**
 	 * Consulta todos em empréstimos
 	 *
-	 * @param bool $bFiltrarFornecedor
+	 * @param array $aDados
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return EmprestimoList
 	 * @throws Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function findAll(bool $bFiltrarFornecedor = false): EmprestimoList {
-		$sInnerJoin = "INNER JOIN psa_pessoa psa on emo.psa_id = psa.psa_id and psa.psa_tipo = ?";
-		$aParam[] = $bFiltrarFornecedor ? Pessoa::FORNECEDOR : Pessoa::CLIENTE;
+	public function findAll(array $aDados): EmprestimoList {
+		$aFiltro = $aDados['aFiltro'] ?? [];
+		$aParams = [];
 
 		$sSql = "SELECT
 					*
 				FROM
 					emo_emprestimo emo
-				$sInnerJoin";
+				INNER JOIN psa_pessoa psa on emo.psa_id = psa.psa_id and psa.psa_tipo = ?
+				WHERE 1 = 1";
+
+		$aParams[] = isset($aDados['filtrar_fornecedor']) && $aDados['filtrar_fornecedor'] ? Pessoa::FORNECEDOR : Pessoa::CLIENTE;
+
+		if (!empty($aFiltro['iPsaId'])) {
+			$sSql .= " AND emo.psa_id = ?";
+			$aParams[] = $aFiltro['iPsaId'];
+		}
+
+		if (!empty($aFiltro['sDataEmprestimo'])) {
+			$sSql .= " AND emo.emo_data_emprestimo = ?";
+			$aParams[] = $aFiltro['sDataEmprestimo'];
+		}
+
+		if (!empty($aFiltro['iJuros'])) {
+			$iJuros = $aFiltro['iJuros'];
+			if ($iJuros == SimNaoEnum::SIM) {
+				$sSql .= " AND emo.emo_taxa_juros is not null";
+			} else if ($iJuros == SimNaoEnum::NAO) {
+				$sSql .= " AND emo.emo_taxa_juros is null";
+			}
+		}
+
+		if (!empty($aFiltro['iParcelado'])) {
+			$iParcelado = $aFiltro['iParcelado'];
+			if ($iParcelado == SimNaoEnum::SIM) {
+				$sSql .= " AND emo.emo_pagamento_parcelado = ?";
+				$aParams[] = SimNaoEnum::SIM;
+			} else if ($iParcelado == SimNaoEnum::NAO) {
+				$sSql .= " AND emo.emo_pagamento_parcelado = ?";
+				$aParams[] = SimNaoEnum::NAO;
+			}
+		}
+
+		if (!empty($aFiltro['aSituacaoId'])) {
+			$sBindParams = implode(" ,",array_fill(0,count($aFiltro['aSituacaoId']),"?"));
+			$sSql .= " AND emo.emo_situacao in ({$sBindParams})";
+			$aParams = array_merge($aParams,$aFiltro['aSituacaoId']);
+		}
+
+		$sSql .= " ORDER BY emo.psa_id, emo.emo_situacao, emo.emo_valor desc";
 
 		try {
-			$aaEmprestimos = Sistema::connection()->getArray($sSql,$aParam);
+			$aaEmprestimos = Sistema::connection()->getArray($sSql,$aParams);
 		} catch (\PDOException $oExp) {
 			throw new Exception("Não foi possível consultar os empréstimos.");
 		}
