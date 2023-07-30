@@ -659,7 +659,7 @@ class Emprestimo {
 		$this->validarPagamento($fValorPagamento);
 
 		$oPagamento = new Pagamento();
-		$oPagamento->setDataPagamento(new \DateTimeImmutable("now"));
+		$oPagamento->setDataPagamento(new \DateTimeImmutable($aDados['pgo_data_pagamento']));
 		$oPagamento->setFormaPagamento($aDados['pgo_forma_pagamento']);
 		$oPagamento->setValor($fValorPagamento);
 

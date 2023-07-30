@@ -42,6 +42,7 @@ $sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 							<th scope="col">Pago</th>
 							<th scope="col">Vencimento</th>
 							<th scope="col">Valor a Pagar</th>
+							<th scope="col">Data Pagamento</th>
 							<th scope="col">Forma Pagamento</th>
 							<th scope="col"><i class="fa-solid fa-money-bill-wave fa-xl"></i></th>
 						</tr>
@@ -49,7 +50,7 @@ $sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 						<tbody>
 						<tr>
 							<td><?php echo $oEmprestimo->getId(); ?></td>
-							<td width="16%">
+							<td width="12%">
 								<select class="select_emp_data pagamento_parcela" name="pra_id" required>
 									<option selected style="display: none;" value="">Parcela</option>
 									<?php foreach ($loParcelas->getComboNaoPagas() as $aValores) { ?>
@@ -61,7 +62,8 @@ $sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 							<td><span id="valor_devido_parcela">- - -</span></td>
 							<td><span id="valor_pago_parcela">- - -</span></td>
 							<td><span id="vencimento_parcela">- - -</span></td>
-							<td width="15%"><input disabled name="pgo_valor" class="valor_pagamento_parcelado" style="width: 100%; border: 1px solid #aaa;" type="text" min="0" step="0.01" required></td>
+							<td width="14%"><input disabled name="pgo_valor" class="valor_pagamento_parcelado" style="width: 100%; border: 1px solid #aaa;" type="text" min="0" step="0.01" required></td>
+							<td><input name="pgo_data_pagamento" type="date" class="select_emp_data" required></td>
 							<td>
 								<select class="select_emp_data" name="pgo_forma_pagamento" required>
 									<option selected style="display: none;" value="">Forma de Pagamento</option>

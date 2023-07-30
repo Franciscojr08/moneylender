@@ -37,6 +37,7 @@ $sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 							<th scope="col">Valor Pago</th>
 							<th scope="col">Vencimento</th>
 							<th scope="col">Valor a Pagar</th>
+							<th scope="col">Data Pagamento</th>
 							<th scope="col">Forma Pagamento</th>
 							<th scope="col"><i class="fa-solid fa-money-bill-wave fa-xl"></i></th>
 						</tr>
@@ -48,7 +49,8 @@ $sAcao = $sDescricaoPessoa == "Fornecedor" ? "pessoal" : "cliente";
 							<td><?php echo "R$ " . number_format($oEmprestimo->getValorDevido(),2,",","."); ?></td>
 							<td><?php echo "R$ " . number_format($oEmprestimo->getValorPago(),2,",","."); ?></td>
 							<td><?php echo $oEmprestimo->getDataPrevisaoPagamento()->format("d/m/Y"); ?></td>
-							<td width="20%"><input name="pgo_valor" id="valor_pagamento" style="width: 100%; border: 1px solid #aaa;" type="text" min="0" step="0.01" required></td>
+							<td width="15%"><input name="pgo_valor" id="valor_pagamento" style="width: 100%; border: 1px solid #aaa;" type="text" min="0" step="0.01" required></td>
+							<td><input name="pgo_data_pagamento" type="date" class="select_emp_data" required></td>
 							<td>
 								<select class="select_emp_data" name="pgo_forma_pagamento" required>
 									<option selected style="display: none;" value="">Forma de Pagamento</option>
