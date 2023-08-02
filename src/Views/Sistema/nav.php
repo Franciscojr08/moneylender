@@ -13,6 +13,7 @@ use MoneyLender\Core\Functions;
 			<ul class="nav_ul_sub">
 				<li><a href="../gestao">Cliente</a></li>
 				<li><a href="../gestao/pessoal">Pessoal</a></li>
+				<li><a href="../gestao/pagamentos">Pagamentos</a></li>
 			</ul>
 		</li>
 		<li>

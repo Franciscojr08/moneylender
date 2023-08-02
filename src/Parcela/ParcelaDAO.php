@@ -20,7 +20,7 @@ class ParcelaDAO implements ParcelaDAOInterface {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function findByEmprestimo(Emprestimo $oEmprestimo): ParcelaList {
-		$sSql = "SELECT * FROM pra_parcela WHERE emo_id = ?";
+		$sSql = "SELECT * FROM pra_parcela WHERE emo_id = ? ORDER BY pra_id";
 		$aParam[] = $oEmprestimo->getId();
 
 		try {

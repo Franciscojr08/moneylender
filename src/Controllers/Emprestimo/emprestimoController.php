@@ -5,6 +5,7 @@ namespace MoneyLender\Src\Controllers\Emprestimo;
 use MoneyLender\Core\Session;
 use MoneyLender\Src\Emprestimo\Emprestimo;
 use MoneyLender\Src\Pessoa\Pessoa;
+use MoneyLender\Src\Relatorio\ReciboEmprestimo;
 use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 use MoneyLender\Src\Sistema\Enum\SituacaoEmprestimoEnum;
 use MoneyLender\Src\Sistema\Sistema;
@@ -31,6 +32,8 @@ class emprestimoController {
 		$loFornecedorList = Sistema::PessoaDAO()->findAll($aDados,true);
 
 		require_once "Emprestimo/index.php";
+		
+		
 	}
 
 	/**
@@ -86,7 +89,13 @@ class emprestimoController {
 				throw new \Exception("Não foi possível cadastrar o empréstimo.");
 			}
 
-			Session::setMensagem("Empréstimo cadastrado com sucesso!", "sucesso");
+			$sMensagem = "Empréstimo cadastrado com sucesso!";
+			if ($oEmprestimo->getPessoa()->hasCPF()) {
+				$sMensagem .= " Para baixar o recibo do empréstimo ";
+				$sMensagem .= "<a target='_blank' href='../relatorio/recibo/{$oEmprestimo->getId()}'>Clique aqui</a>.";
+			}
+
+			Session::setMensagem($sMensagem, "sucesso");
 		} catch (\Exception $oExp) {
 			Session::setMensagem($oExp->getMessage(), "erro");
 		}
@@ -141,4 +150,6 @@ class emprestimoController {
 
 		header("Location: ../gestao{$sAcao}");
 	}
+
+	
 }

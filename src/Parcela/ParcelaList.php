@@ -3,6 +3,7 @@
 namespace MoneyLender\Src\Parcela;
 
 use MoneyLender\Src\Sistema\Enum\SituacaoParcelaEnum;
+use MoneyLender\Src\Sistema\Sistema;
 
 class ParcelaList extends \SplObjectStorage {
 
@@ -111,5 +112,25 @@ class ParcelaList extends \SplObjectStorage {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Retorna a primeira parcela
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return Parcela
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function first(): Parcela {
+		$iPraId = 0;
+
+		foreach ($this as $oParcela) {
+			$iPraId = $oParcela->getId();
+			break;
+		}
+
+		return Sistema::ParcelaDAO()->find($iPraId);
 	}
 }

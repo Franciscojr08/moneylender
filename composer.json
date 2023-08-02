@@ -18,6 +18,6 @@
   "require": {
     "ext-mbstring": "*",
     "ext-pdo": "*",
-    "tecnickcom/tcpdf": "6.6.2"
+    "fpdf/fpdf": "1.86.0"
   }
 }
