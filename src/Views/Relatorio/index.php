@@ -3,10 +3,10 @@
 use MoneyLender\Core\Functions;
 use MoneyLender\Src\Pessoa\Pessoa;
 use MoneyLender\Src\Pessoa\PessoaList;
-use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 /**
  * @var PessoaList $loPessoaList
+ * @var PessoaList $loFornecedorList
  * @var Pessoa $oPessoa
  */
 
@@ -34,22 +34,19 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 		<p class="mb-4">Selecione o tipo de relatório que deseja gerar.</p>
 
 		<h6>Modelo de relatório</h6>
-		<input type="radio" checked data-target="filtro_recibo" id="recibo" name="rel_tipo" class="rel_tipo">
+		<input type="radio" checked data-target="filtro_recibo" id="recibo" name="rel_tipo" value="rel_recibo" class="rel_tipo">
 		<label for="recibo" style="color: #fff; margin-bottom: 8px">2ª Via recibo</label><br>
 
-		<input type="radio" data-target="not_filtro" id="fornecido" name="rel_tipo" class="rel_tipo">
-		<label for="fornecido" style="color: #fff; margin-bottom: 8px">Fornecido</label><br>
+		<input type="radio" data-target="not_filtro" id="faturamento" name="rel_tipo" value="rel_faturamento" class="rel_tipo">
+		<label for="faturamento" style="color: #fff; margin-bottom: 8px">Faturamento</label><br>
 
-		<input type="radio" data-target="not_filtro" id="recebido" name="rel_tipo" class="rel_tipo">
-		<label for="recebido" style="color: #fff; margin-bottom: 8px">Recebido</label><br>
-
-		<input type="radio" data-target="filtro_emprestimo"  id="emprestimos" name="rel_tipo" class="rel_tipo">
+		<input type="radio" data-target="filtro_emprestimo"  id="emprestimos" name="rel_tipo" value="rel_emprestimo" class="rel_tipo">
 		<label for="emprestimos" style="color: #fff; margin-bottom: 8px">Empréstimos</label><br>
 
-		<input type="radio" data-target="filtro_clientes" id="clientes" name="rel_tipo" class="rel_tipo">
+		<input type="radio" data-target="filtro_clientes" id="clientes" name="rel_tipo" value="rel_cliente" class="rel_tipo">
 		<label for="clientes" style="color: #fff; margin-bottom: 8px">Clientes</label><br>
 
-		<input type="radio" data-target="filtro_fornecedores" id="fornecedores" name="rel_tipo" class="rel_tipo">
+		<input type="radio" data-target="filtro_fornecedores" id="fornecedores" name="rel_tipo" value="rel_fornecedor" class="rel_tipo">
 		<label for="fornecedores" style="color: #fff;">Fornecedores</label><br>
 
 	</div>
@@ -58,7 +55,9 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 		<h3 style="">Filtros do relatório</h3>
 		<p class="mb-4">Preencha os campos caso possua e deseje filtrar.</p>
 
-		<form>
+		<form action="../relatorio/gerar" method="post" target="_blank">
+			<input type="hidden" class="tipo_relatorio" name="tipo_relatorio" value="rel_recibo">
+
 			<div id="filtro_recibo" class="div_filtro">
 				<?php require_once "Relatorio/include/filtro_recibo.php"; ?>
 			</div>
@@ -91,10 +90,10 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 			<div id="filtro_fornecedores" style="display:none;" class="div_filtro">
 				<div>
 					<label>Fornecedor</label><br>
-					<select style="width: 100%;" id="fornecedor" name="fornecedor_id" class="select_emp_data" required>
+					<select style="width: 100%;" id="fornecedor" name="fornecedor_id" class="select_emp_data">
 						<option selected style="display: none;" value="">Selecione o Fornecedor</option>
 						<?php
-						foreach ($loPessoaList as $oPessoa) {
+						foreach ($loFornecedorList as $oPessoa) {
 							if ($oPessoa->isCliente()) {
 								continue;
 							}
@@ -116,7 +115,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 			</div>
 			
 			<div style="display: flex; justify-content: center" class="btn_cad_emp">
-				<button>Gerar</button>
+				<button type="submit">Gerar</button>
 			</div>
 		</form>
 	</div>
@@ -124,18 +123,6 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 <?php Functions::renderFooter(); ?>
 <?php Functions::addScript(["js/Relatorio/relatorio.js", "js/Sistema/sistema.js"]); ?>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
-
-<script>
-	$(document).ready(function () {
-		$('#emo_valor').maskMoney({
-			prefix: "R$ ",
-			decimal: ",",
-			thousands: "."
-		});
-	});
-</script>
 
 </body>
 </html>

@@ -27,6 +27,7 @@ class ReciboEmprestimo extends Fpdf {
 	public function __construct() {
 		parent::__construct('L', 'mm', [95,205]);
 		date_default_timezone_set('America/Manaus');
+
 		$this->AddPage();
 		$this->SetAutoPageBreak(false);
 		$this->setTitle(mb_convert_encoding("Recibo Empréstimo Realizado",'ISO-8859-1', 'UTF-8'));
@@ -95,8 +96,14 @@ class ReciboEmprestimo extends Fpdf {
 		$fValorEmprestimo = number_format($this->oEmprestimo->getValorComJuros(),2,",",".");
 		$sDataEmprestimo = $this->oEmprestimo->getDataEmprestimo()->format("d/m/Y");
 
-		$sTexto = "Eu, {$this->oPessoa->getNome()}, inscrito(a) no CPF sob o nº {$this->oPessoa->getCPFComMascara()}";
-		$sTexto .= " tomei emprestado junto a Matheus Silva Pereira, inscrito no CPF sob o nº 045.355.655-50, a";
+		if ($this->oPessoa->isCliente()) {
+			$sTexto = "Eu, {$this->oPessoa->getNome()}, inscrito(a) no CPF sob o nº {$this->oPessoa->getCPFComMascara()}";
+			$sTexto .= " tomei emprestado junto a Matheus Silva Pereira, inscrito no CPF sob o nº 045.355.655-50, a";
+		} else {
+			$sTexto = "Eu, Matheus Silva Pereira, inscrito no CPF sob o nº 045.355.655-50, tomei emprestado junto a";
+			$sTexto .= " {$this->oPessoa->getNome()}, inscrito(a) no CPF sob o nº {$this->oPessoa->getCPFComMascara()}, a";
+		}
+
 		$sTexto .= " importância de R$ $fValorEmprestimo ({$this->extenso($this->oEmprestimo->getValorComJuros())})";
 		$sTexto .= " no dia $sDataEmprestimo{$this->getDescricaoTipoPagamento()}";
 
@@ -186,15 +193,17 @@ class ReciboEmprestimo extends Fpdf {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	private function imprimirRodape(): void {
+		$this->Image("public/assets/img/assinatura.png",100,$this->GetY() + 15,10);
 		$this->SetXY(80,$this->GetY() + 8);
-		$this->Cell(50,6,"Manaus - AM, {$this->getDataAtualExtenso()}","","","C");
+		$this->Cell(50,6,"Manaus - AM, {$this->getDataAtualExtenso()}","",1,"C");
 		
 		$this->SetFont("arial","B",10);
 		$this->SetXY(80,$this->GetY() + 15);
 		$this->Cell(50,6,"Matheus Sila Pereira","T","1","C");
-		
+
+		$sDescricaoTipo = $this->oPessoa->isCliente() ? "Credor" : "Devedor";
 		$this->SetX(80);
-		$this->Cell(50,6,"Credor","","","C");
+		$this->Cell(50,6,$sDescricaoTipo,"","","C");
 	}
 
 	/**

@@ -35,6 +35,7 @@ class Emprestimo {
 	private PagamentoList $loPagamentos;
 	private \DateTimeImmutable $oDataCadastro;
 	private \DateTimeImmutable $oDataAtualizacao;
+	private int $iCancelado;
 
 	/**
 	 * Cria um objeto de parcela a partir de um array
@@ -55,6 +56,7 @@ class Emprestimo {
 		$oEmprestimo->oDataEmprestimo = new \DateTimeImmutable($aDados['emo_data_emprestimo']);
 		$oEmprestimo->oDataCadastro = new \DateTimeImmutable($aDados['emo_data_cadastro']);
 		$oEmprestimo->fValorPago = doubleval($aDados['emo_valor_pago']);
+		$oEmprestimo->iCancelado = $aDados['emo_cancelado'];
 
 		if (!empty($aDados['emo_valor_devido'])) {
 			$oEmprestimo->fValorDevido = doubleval($aDados['emo_valor_devido']);
@@ -562,6 +564,31 @@ class Emprestimo {
 	}
 
 	/**
+	 * Retorna se o empréstimo está cancelado
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return int
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function isCancelado(): int {
+		return $this->iCancelado;
+	}
+
+	/**
+	 * Atribui se o empréstimo está cancelado
+	 *
+	 * @param int $iCancelado
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function setCancelado(int $iCancelado): void {
+		$this->iCancelado = $iCancelado;
+	}
+
+	/**
 	 * Cadastra um empréstimo
 	 *
 	 * @param array $aEmprestimo
@@ -738,6 +765,37 @@ class Emprestimo {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function excluirEmprestimo(): bool {
+		$this->excluirParcelasEPagamentos();
+
+		return Sistema::EmprestimoDAO()->delete($this);
+	}
+
+	/**
+	 * Cancela o empréstimo
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function cancelar(): bool {
+		$this->excluirParcelasEPagamentos();
+		$this->iSituacao = SituacaoEmprestimoEnum::CANCELADO;
+
+		return Sistema::EmprestimoDAO()->cancelar($this);
+	}
+
+	/**
+	 * Exclui as parcelas e pagamentos do empréstimo
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	private function excluirParcelasEPagamentos(): void {
 		/** @var Pagamento $oPagamento */
 		/** @var Parcela $oParcela */
 
@@ -754,7 +812,46 @@ class Emprestimo {
 				$oParcela->excluir();
 			}
 		}
+	}
 
-		return Sistema::EmprestimoDAO()->delete($this);
+	/**
+	 * Atualiza a situação do empréstimo
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function atualizaraSituacao(): void {
+		$aSituacoes = [
+			SituacaoEmprestimoEnum::PAGO,
+			SituacaoEmprestimoEnum::ATRASADO,
+			SituacaoEmprestimoEnum::CANCELADO
+		];
+
+		if (in_array($this->getSituacaoId(),$aSituacoes)) {
+			return;
+		}
+
+		$oDataAtual = new \DateTimeImmutable("now");
+
+		if ($this->isPagamentoParcelado()) {
+			$loParcelas = $this->getParcelas();
+
+			/** @var Parcela $oParcela */
+			foreach ($loParcelas as $oParcela) {
+				if ($oParcela->getDataPrevisaoPagamento() < $oDataAtual) {
+					$this->iSituacao = SituacaoEmprestimoEnum::ATRASADO;
+					$this->atualizar();
+					break;
+				}
+			}
+		} else {
+			if ($this->oDataPrevisaoPagamento < $oDataAtual) {
+				$this->iSituacao = SituacaoEmprestimoEnum::ATRASADO;
+				$this->atualizar();
+			}
+		}
 	}
 }

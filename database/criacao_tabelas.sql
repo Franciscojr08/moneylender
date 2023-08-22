@@ -32,7 +32,8 @@ CREATE TABLE emo_emprestimo
     emo_data_pagamento          DATE              NULL,
     emo_situacao                TINYINT(4)        NOT NULL,
     emo_data_cadastro           DATE              NOT NULL,
-    emo_data_atualizacao        DATE              NULL
+    emo_data_atualizacao        DATE              NULL,
+    emo_cancelado               TINYINT(1) DEFAULT 2
 );
 
 ALTER TABLE emo_emprestimo

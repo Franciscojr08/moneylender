@@ -732,6 +732,15 @@ class Pessoa {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function excluir(): bool {
+		if ($this->hasEmprestimos()) {
+			$loEmprestimos = $this->getEmprestimos();
+
+			/** @var Emprestimo $oEmprestimo */
+			foreach ($loEmprestimos as $oEmprestimo) {
+				$oEmprestimo->excluirEmprestimo();
+			}
+		}
+
 		return Sistema::PessoaDAO()->delete($this);
 	}
 }

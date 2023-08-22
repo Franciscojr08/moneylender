@@ -1,9 +1,12 @@
 <?php
 
 use MoneyLender\Core\Functions;
+use MoneyLender\Src\Emprestimo\EmprestimoList;
 use MoneyLender\Src\Pessoa\PessoaList;
 
 /** @var PessoaList $loPessoaList */
+/** @var EmprestimoList $loEmprestimos */
+/** @var bool $bFiltrarFornecedor */
 ?>
 
 <!doctype html>
@@ -22,16 +25,16 @@ use MoneyLender\Src\Pessoa\PessoaList;
 <body>
 <?php Functions::renderMenu(); ?>
 
-<div class="content_div">
-	<div class="d-flex justify-content-center" style="padding-bottom: 30px">
-		<h3>Desculpe, página não encontrada!</h3>
+<div class="content_gestao">
+	<div class="d-flex justify-content-center">
+		<h3>Pagamentos</h3>
 	</div>
+
 </div>
 
-<?php
-Functions::renderFooter();
-Functions::addScript(["js/Pessoa/pessoa.js", "js/Sistema/sistema.js"]);
-?>
+
+<?php Functions::renderFooter(); ?>
+<?php Functions::addScript(["js/Gestao/gestao.js", "js/Sistema/sistema.js"]); ?>
 
 </body>
 </html>

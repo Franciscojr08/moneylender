@@ -25,11 +25,13 @@ $sDescricaoPessoa = $bFiltrarFornecedor ? "Fornecedor" : "Cliente";
 		<div id="fornecedor_emp" style="width: 22%; border-bottom: 1px solid; margin-left: 3%;">
 			<label><b>Situação</b></label><br>
 			<input type="checkbox" id="em_aberto" name="aFiltro[emo_situacao][]" class="emo_situacao_filtro" value="1">
-			<label for="em_aberto" style="margin-right: 8px;"> Em Aberto</label>
-			<input type="checkbox" id="pago" name="aFiltro[emo_situacao][]" class="emo_situacao_filtro" value="2">
-			<label for="pago" style="margin-right: 8px;"> Pago</label>
+			<label for="em_aberto" style="margin-right: 8px;"> ABE</label>
 			<input type="checkbox" id="atrasado" name="aFiltro[emo_situacao][]" class="emo_situacao_filtro" value="3">
-			<label for="atrasado"> Atrasado</label>
+			<label for="atrasado" style="margin-right: 8px;"> ATR</label>
+			<input type="checkbox" id="pago" name="aFiltro[emo_situacao][]" class="emo_situacao_filtro" value="2">
+			<label for="pago" style="margin-right: 8px;"> PAG</label>
+			<input type="checkbox" id="cancelado" name="aFiltro[emo_situacao][]" class="emo_situacao_filtro" value="4">
+			<label for="cancelado"> CAN</label>
 		</div>
 
 		<div style="width: 15%; border-bottom: 1px solid; margin-left: 3%;">

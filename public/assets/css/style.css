@@ -347,7 +347,7 @@ input:focus, select:focus {
 }
 
 .inf_emprestimos {
-    width: 36%;
+    width: 50%;
     margin-right: 2%;
     display: flex;
     justify-content: space-around;

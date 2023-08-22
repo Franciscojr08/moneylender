@@ -14,7 +14,7 @@ use MoneyLender\Src\Pagamento\PagamentoList;
 $fTotalPago = 0.0;
 ?>
 
-<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 	<div class="modal-content">
 		<div class="modal-header">
 			<h5 class="modal-title" id="">Pagamentos Realizados</h5>

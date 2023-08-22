@@ -7,10 +7,19 @@ $(document).ready(function() {
 		$(".toggle_spinner").hide();
 	});
 
+	carregarValoresAjax("getValorTotalInvestido","li_total_investido");
+	carregarValoresAjax("getValorTotalRecebido","li_total_recebido");
+	carregarValoresAjax("getValorTotalAReceber","li_total_a_receber");
+	carregarValoresAjax("getValorTotalAtrasado","li_total_atrasado");
+	carregarValoresAjax("getValorJurosRecebido","li_juros_recebido");
+	carregarValoresAjax("getValorJurosAReceber","li_juros_a_receber");
 	carregarEmprestimos();
+
 	modalVisualizarPagamento();
 	modalLancarPagamento();
+	modalCancelarEmprestimo();
 	modalExcluirEmprestimo();
+
 	filtrarEmprestimoAjax();
 	limparFiltroEmprestimo();
 })
@@ -60,6 +69,25 @@ function modalLancarPagamento() {
 			},
 			success: function (html) {
 				$("#modalLancarPagamentos").html(html).modal("show");
+			}
+		});
+	});
+}
+
+function modalCancelarEmprestimo() {
+	$(".tabela_emprestimo tbody").on("click", ".btn_cancelar_emprestimo", function() {
+		let iEmoId = $(this).data("target");
+
+		$.ajax({
+			url: "../../emprestimo/carregarModalCancelarEmprestimo",
+			type: "POST",
+			dataType: "html",
+			data: {
+				iEmoId:iEmoId,
+				sUrl:window.location.href
+			},
+			success: function (html) {
+				$("#modalCancelarEmprestimo").html(html).modal("show");
 			}
 		});
 	});
@@ -130,5 +158,19 @@ function limparFiltroEmprestimo() {
 		});
 
 		carregarEmprestimos();
+	});
+}
+
+function carregarValoresAjax(sAcao,eElement) {
+	$.ajax({
+		url: `../emprestimo/${sAcao}`,
+		type: "POST",
+		data: {sUrl:window.location.href},
+		dataType: "json",
+		success: function (json) {
+			$(`#${eElement}`).contents().filter(function() {
+				return this.nodeType === 3 && this.nodeValue.trim() === "Aguarde...";
+			}).replaceWith(json);
+		}
 	});
 }

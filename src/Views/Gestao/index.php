@@ -45,6 +45,7 @@ use MoneyLender\Src\Pessoa\PessoaList;
 		<label>Em Aberto: <span><?php echo $loEmprestimos->getQuantidadeEmAberto(); ?></span></label>
 		<label>Atrasados: <span><?php echo $loEmprestimos->getQuantidadeAtrasado(); ?></span></label>
 		<label>Pagos: <span><?php echo $loEmprestimos->getQuantidadePago(); ?></span></label>
+		<label>Cancelados: <span><?php echo $loEmprestimos->getQuantidadeCancelado(); ?></span></label>
 	</div>
 
 	<table class="table table-striped tabela_emprestimo">
@@ -72,6 +73,8 @@ use MoneyLender\Src\Pessoa\PessoaList;
 
 <div class="modal fade" id="modalVisualizarPagamentos"></div>
 <div class="modal fade" id="modalLancarPagamentos"></div>
+
+<div class="modal fade" id="modalCancelarEmprestimo"></div>
 <div class="modal fade" id="modalExcluirEmprestimo"></div>
 
 <?php Functions::renderFooter(); ?>

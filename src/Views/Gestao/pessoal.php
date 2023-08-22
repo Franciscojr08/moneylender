@@ -42,6 +42,7 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 		<label>Em Aberto: <span><?php echo $loEmprestimos->getQuantidadeEmAberto(); ?></span></label>
 		<label>Atrasados: <span><?php echo $loEmprestimos->getQuantidadeAtrasado(); ?></span></label>
 		<label>Pagos: <span><?php echo $loEmprestimos->getQuantidadePago(); ?></span></label>
+		<label>Cancelados: <span><?php echo $loEmprestimos->getQuantidadeCancelado(); ?></span></label>
 	</div>
 
 	<table class="table table-striped tabela_emprestimo">
@@ -70,8 +71,16 @@ use MoneyLender\Src\Emprestimo\EmprestimoList;
 <div class="modal fade" id="modalVisualizarPagamentos"></div>
 <div class="modal fade" id="modalLancarPagamentos"></div>
 
-<div class="modal fade" id="modalEditarEmprestimo"></div>
+<div class="modal fade" id="modalCancelarEmprestimo"></div>
 <div class="modal fade" id="modalExcluirEmprestimo"></div>
+
+<div aria-label="Page navigation example" class="d-flex justify-content-center">
+	<ul class="pagination">
+<!--		<li class="page-item"><a class="page-link" href="#">Primeira</a></li>-->
+<!--		<li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--		<li class="page-item"><a class="page-link" href="#">Última</a></li>-->
+	</ul>
+</div>
 
 <?php Functions::renderFooter(); ?>
 <?php Functions::addScript(["js/Gestao/gestao.js", "js/Sistema/sistema.js"]); ?>

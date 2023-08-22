@@ -152,7 +152,7 @@ use MoneyLender\Src\Sistema\Enum\SimNaoEnum;
 
 				<div style="width: 32%; margin-left: 4%">
 					<label>QTD Parcelas</label><br>
-					<input style="width: 100%;" type="number" min="1" id="emo_quantidade_parcelas" name="aEmprestimo[emo_quantidade_parcelas]" placeholder="Parcelas" required>
+					<input style="width: 100%;" type="number" min="2" id="emo_quantidade_parcelas" name="aEmprestimo[emo_quantidade_parcelas]" placeholder="Parcelas" required>
 				</div>
 
 				<div style="width: 40.5%; margin-left: 5%">
