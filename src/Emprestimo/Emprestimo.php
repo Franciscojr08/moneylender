@@ -87,11 +87,6 @@ class Emprestimo {
 			$oEmprestimo->oDataAtualizacao = new \DateTimeImmutable($aDados['emo_data_atualizacao']);
 		}
 
-		$loParcelas = Sistema::ParcelaDAO()->findByEmprestimo($oEmprestimo);
-		if (!$loParcelas->isEmpty()) {
-			$oEmprestimo->loParcelas = $loParcelas;
-		}
-
 		return $oEmprestimo;
 	}
 
@@ -432,10 +427,16 @@ class Emprestimo {
 	 *
 	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return ParcelaList
+	 * @throws \Exception
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function getParcelas(): ParcelaList {
+		$loParcelas = Sistema::ParcelaDAO()->findByEmprestimo($this);
+		if (!$loParcelas->isEmpty()) {
+			$this->loParcelas = $loParcelas;
+		}
+
 		return $this->loParcelas;
 	}
 
@@ -618,7 +619,8 @@ class Emprestimo {
 			$iAno = $oPrimeiraParcela->format("Y");
 
 			for ($i = 0; $i < $iQuantidadeParcelas; $i++) {
-				$fValorParcela = $this->calcularParcela($fValorDevido,$iQuantidadeParcelas, $iValorMaximo);
+				$bUltimaParcela = ($i + 1) == $iQuantidadeParcelas;
+				$fValorParcela = $this->calcularParcela($fValorDevido,$iQuantidadeParcelas, $iValorMaximo,$bUltimaParcela);
 
 				$oParcela = new Parcela();
 				$oParcela->setEmprestimo($this->iId);
@@ -662,9 +664,7 @@ class Emprestimo {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	public function atualizar(): void {
-		if ($this->fValorDevido == 0.0 && $this->fValorPago == $this->getValorComJuros()) {
-			$this->iSituacao = SituacaoEmprestimoEnum::PAGO;
-		}
+		$this->verificarSituacaoEmprestimoAoAtualizar();
 
 		$this->oDataAtualizacao = new \DateTimeImmutable("now");
 		Sistema::EmprestimoDAO()->update($this);
@@ -694,16 +694,16 @@ class Emprestimo {
 			throw new \Exception("Não foi possível lançar o pagamento.");
 		}
 
-		$this->setValorDevido(round($this->getValorDevido(),2) - $fValorPagamento);
-		$this->setValorPago(round($this->getValorPago(),2) + $fValorPagamento);
-		$this->atualizar();
-
 		if ($this->isPagamentoParcelado()) {
 			$oParcela = Sistema::ParcelaDAO()->find($aDados['pra_id']);
 			$oParcela->setValorDevido( round($oParcela->getValorDevido(),2) - $fValorPagamento);
 			$oParcela->setValorPago(round($oParcela->getValorPago(),2) + $fValorPagamento);
 			$oParcela->atualizar();
 		}
+
+		$this->setValorDevido(round($this->getValorDevido(),2) - $fValorPagamento);
+		$this->setValorPago(round($this->getValorPago(),2) + $fValorPagamento);
+		$this->atualizar();
 
 		return true;
 	}
@@ -719,7 +719,9 @@ class Emprestimo {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	private function validarPagamento(float $fValorPagamento): void {
-		if ($fValorPagamento > $this->getValorDevido()) {
+		$fValorDevido = round($this->getValorDevido(),2);
+
+		if ($fValorPagamento > $fValorDevido) {
 			throw new \Exception("O valor do pagamento não pode ser maior que o valor devido.");
 		}
 
@@ -734,21 +736,38 @@ class Emprestimo {
 	 * @param float $fValorEmprestimo
 	 * @param int $iNumeroParcelas
 	 * @param float $fValorMaximo
+	 * @param bool $bUltimaParcela
 	 * @author Francisco Santos franciscojuniordh@gmail.com.br
 	 * @return float
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	private function calcularParcela(float $fValorEmprestimo, int $iNumeroParcelas, float $fValorMaximo): float {
+	private function calcularParcela(
+		float $fValorEmprestimo,
+		int $iNumeroParcelas,
+		float $fValorMaximo,
+		bool $bUltimaParcela
+	): float {
 		$fValorParcela = round($fValorEmprestimo / $iNumeroParcelas,2);
 		$fValorMaximo = round($fValorMaximo,2);
 
-		while ($fValorParcela > $fValorMaximo) {
-			$fValorParcela -= 0.01;
-			$fValorParcela = round($fValorParcela, 2);
+		if ($fValorParcela > $fValorMaximo) {
+			while ($fValorParcela > $fValorMaximo) {
+				$fValorParcela -= 0.01;
+				$fValorParcela = round($fValorParcela, 2);
 
-			if ($fValorParcela == $fValorMaximo) {
-				break;
+				if ($fValorParcela == $fValorMaximo) {
+					break;
+				}
+			}
+		} elseif ($fValorParcela < $fValorMaximo && $bUltimaParcela) {
+			while ($fValorParcela < $fValorMaximo) {
+				$fValorParcela += 0.01;
+				$fValorParcela = round($fValorParcela, 2);
+
+				if ($fValorParcela == $fValorMaximo) {
+					break;
+				}
 			}
 		}
 
@@ -853,6 +872,44 @@ class Emprestimo {
 			if ($oDataPrevisao < $oDataAtual) {
 				$this->iSituacao = SituacaoEmprestimoEnum::ATRASADO;
 				$this->atualizar();
+			}
+		}
+	}
+
+	/**
+	 * Verifica a situação do empréstimo ao atualizar
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return void
+	 * @throws \Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	private function verificarSituacaoEmprestimoAoAtualizar(): void {
+		if ($this->fValorDevido == 0.0 && $this->fValorPago == $this->getValorComJuros()) {
+			$this->iSituacao = SituacaoEmprestimoEnum::PAGO;
+			return;
+		}
+
+		if ($this->isPagamentoParcelado()) {
+			$loParcelas = $this->getParcelas();
+			$loParcelas = $loParcelas->orderPorDataPrevisaoPagamentoDesc();
+			$oDataAtual = (new \DateTimeImmutable("now"))->setTime(0,0,0);
+
+			/** @var Parcela $oParcela */
+			foreach ($loParcelas as $oParcela) {
+				$iSituacao = $oParcela->getSituacao();
+				$oDataPrevisaoPagamento = $oParcela->getDataPrevisaoPagamento()->setTime(0,0,0);
+
+				if ($oDataPrevisaoPagamento >= $oDataAtual) {
+					continue;
+				}
+
+				if ($iSituacao == SituacaoParcelaEnum::PAGA) {
+					$this->iSituacao = SituacaoEmprestimoEnum::EM_ABERTO;
+				} else {
+					$this->iSituacao = SituacaoEmprestimoEnum::ATRASADO;
+				}
 			}
 		}
 	}

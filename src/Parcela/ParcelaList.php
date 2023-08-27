@@ -133,4 +133,40 @@ class ParcelaList extends \SplObjectStorage {
 
 		return Sistema::ParcelaDAO()->find($iPraId);
 	}
+	
+	public function orderPorDataPrevisaoPagamentoDesc(): ParcelaList {
+		$oList = new static();
+		$aObjectParcelaList = $this->toArray();
+
+		usort($aObjectParcelaList, function (Parcela $oParcelaOne, Parcela $oParcelaTwo) {
+			$oDataPrevisaoOne = $oParcelaOne->getDataPrevisaoPagamento();
+			$oDataPrevisaoTwo = $oParcelaTwo->getDataPrevisaoPagamento();
+
+			return $oDataPrevisaoTwo < $oDataPrevisaoOne ? -1 : 1;
+		});
+
+		$oList->attachFromArray($aObjectParcelaList);
+
+		return $oList;
+	}
+
+	public function toArray(): array {
+		$aArrayObject = [];
+
+		foreach ($this as $oObject) {
+			$aArrayObject[] = $oObject;
+		}
+
+		return $aArrayObject;
+	}
+
+	public function attachFromArray(array $aObject): void {
+		if (empty($aObject)) {
+			return;
+		}
+
+		foreach ($aObject as $oObject) {
+			$this->attach($oObject);
+		}
+	}
 }

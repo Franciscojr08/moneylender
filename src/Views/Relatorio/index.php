@@ -62,7 +62,7 @@ use MoneyLender\Src\Pessoa\PessoaList;
 				<?php require_once "Relatorio/include/filtro_emprestimo.php"; ?>
 			</div>
 
-			<div id="filtro_pessoa" style="display:none;" class="div_filtro">
+			<div id="filtro_pessoa" style="display:none;  padding-bottom: 11rem;" class="div_filtro">
 				<?php require_once "Relatorio/include/filtro_pessoa.php"; ?>
 			</div>
 

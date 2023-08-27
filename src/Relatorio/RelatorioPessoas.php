@@ -11,7 +11,9 @@ use MoneyLender\Src\Sistema\Sistema;
  * @package MoneyLender\Src\Relatorio
  * @version 1.0.0
  */
-class RelatorioPessoas  extends Fpdf {
+class RelatorioPessoas extends Fpdf {
+
+	use pdf_cellfit;
 
 	private array $aDados;
 	private bool $bFornecedor;
@@ -198,15 +200,15 @@ class RelatorioPessoas  extends Fpdf {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	private function imprimirPessoa(Pessoa $oPessoa): void {
-		$this->Cell(15,6,$oPessoa->getId(),"B","","C");
-		$this->Cell(15,6,$oPessoa->getDataCadastro()->format("d/m/Y"),"B","","C");
-		$this->Cell(50,6,mb_convert_encoding($oPessoa->getNome(),'ISO-8859-1', 'UTF-8'),"B","","C");
-		$this->Cell(20,6,$oPessoa->hasCPF() ? $oPessoa->getCPFComMascara() : "- - -","B","","C");
-		$this->Cell(30,6,$oPessoa->hasEmail() ? $oPessoa->getEmail() : "- - -","B","","C");
-		$this->Cell(25,6,$oPessoa->hasTelefone() ? $oPessoa->getTelefoneComMascara() : "- - -","B","","C");
-		$this->Cell(20,6,mb_convert_encoding($oPessoa->isIndicado() ? "Sim" : "Não",'ISO-8859-1', 'UTF-8'),"B","","C");
-		$this->Cell(50,6,$oPessoa->isIndicado() ? $oPessoa->getNomeIndicador() : "- - -","B","","C");
-		$this->Cell(20,6,$oPessoa->hasEmprestimos() ? $oPessoa->getEmprestimos()->count() : "- - -","B","","C");
-		$this->Cell(30,6,$oPessoa->hasEmprestimos() ? "R$ " . number_format($oPessoa->getEmprestimos()->getValorTotalComJuros(),2,",",".") : mb_convert_encoding("Não",'ISO-8859-1', 'UTF-8'),"B","","C");
+		$this->CellFitScale(15,6,$oPessoa->getId(),"B","","C");
+		$this->CellFitScale(15,6,$oPessoa->getDataCadastro()->format("d/m/Y"),"B","","C");
+		$this->CellFitScale(50,6,mb_convert_encoding($oPessoa->getNome(),'ISO-8859-1', 'UTF-8'),"B","","C");
+		$this->CellFitScale(20,6,$oPessoa->hasCPF() ? $oPessoa->getCPFComMascara() : "- - -","B","","C");
+		$this->CellFitScale(30,6,$oPessoa->hasEmail() ? $oPessoa->getEmail() : "- - -","B","","C");
+		$this->CellFitScale(25,6,$oPessoa->hasTelefone() ? $oPessoa->getTelefoneComMascara() : "- - -","B","","C");
+		$this->CellFitScale(20,6,mb_convert_encoding($oPessoa->isIndicado() ? "Sim" : "Não",'ISO-8859-1', 'UTF-8'),"B","","C");
+		$this->CellFitScale(50,6,$oPessoa->isIndicado() ? $oPessoa->getNomeIndicador() : "- - -","B","","C");
+		$this->CellFitScale(20,6,$oPessoa->hasEmprestimos() ? $oPessoa->getEmprestimos()->count() : "- - -","B","","C");
+		$this->CellFitScale(30,6,$oPessoa->hasEmprestimos() ? "R$ " . number_format($oPessoa->getEmprestimos()->getValorTotalComJuros(),2,",",".") : "- - -","B","","C");
 	}
 }

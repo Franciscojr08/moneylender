@@ -14,6 +14,8 @@ use MoneyLender\Src\Sistema\Sistema;
  */
 class RelatorioFaturamento extends Fpdf {
 
+	use pdf_cellfit;
+
 	private float $fFaturamentoAtual = 0.0;
 	private float $fFaturamentoPrevisto = 0.0;
 
@@ -107,11 +109,11 @@ class RelatorioFaturamento extends Fpdf {
 
 			$this->Cell(25,6,$aDadoCliente['quantidade'],1,"","C");
 			$this->Cell(25,6,mb_convert_encoding($aDadoCliente['situacao_descricao'],'ISO-8859-1', 'UTF-8'),1,"","C");
-			$this->Cell(28,6,$fValor,1,"","C");
-			$this->Cell(28,6,$fValorDevido,1,"","C");
-			$this->Cell(28,6,$fValorPago,1,"","C");
-			$this->Cell(28,6,$fValorJuros,1,"","C");
-			$this->Cell(28,6,$fValorJurosPago,1,"","C");
+			$this->CellFitScale(28,6,$fValor,1,"","C");
+			$this->CellFitScale(28,6,$fValorDevido,1,"","C");
+			$this->CellFitScale(28,6,$fValorPago,1,"","C");
+			$this->CellFitScale(28,6,$fValorJuros,1,"","C");
+			$this->CellFitScale(28,6,$fValorJurosPago,1,"","C");
 			$this->Ln(6);
 
 			$fValorTotal += $aDadoCliente['valor'];
@@ -133,11 +135,11 @@ class RelatorioFaturamento extends Fpdf {
 		$this->SetFont("arial","B",10);
 		$this->SetFillColor(200, 200, 200);
 		$this->Cell(50,6,"Total",1,"","C",true);
-		$this->Cell(28,6,$fValorTotal,1,"","C",true);
-		$this->Cell(28,6,$fValorDevidoTotal,1,"","C",true);
-		$this->Cell(28,6,$fValorPagoTotal,1,"","C",true);
-		$this->Cell(28,6,$fJurosTotal,1,"","C",true);
-		$this->Cell(28,6,$fJurosPagoTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fValorTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fValorDevidoTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fValorPagoTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fJurosTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fJurosPagoTotal,1,"","C",true);
 		$this->Ln(6);
 	}
 
@@ -183,11 +185,11 @@ class RelatorioFaturamento extends Fpdf {
 
 			$this->Cell(25,6,$aDadoCliente['quantidade'],1,"","C");
 			$this->Cell(25,6,mb_convert_encoding($aDadoCliente['situacao_descricao'],'ISO-8859-1', 'UTF-8'),1,"","C");
-			$this->Cell(28,6,$fValor,1,"","C");
-			$this->Cell(28,6,$fValorDevido,1,"","C");
-			$this->Cell(28,6,$fValorPago,1,"","C");
-			$this->Cell(28,6,$fValorJuros,1,"","C");
-			$this->Cell(28,6,$fValorJurosPago,1,"","C");
+			$this->CellFitScale(28,6,$fValor,1,"","C");
+			$this->CellFitScale(28,6,$fValorDevido,1,"","C");
+			$this->CellFitScale(28,6,$fValorPago,1,"","C");
+			$this->CellFitScale(28,6,$fValorJuros,1,"","C");
+			$this->CellFitScale(28,6,$fValorJurosPago,1,"","C");
 			$this->Ln(6);
 
 			$fValorTotal += $aDadoCliente['valor'];
@@ -210,11 +212,11 @@ class RelatorioFaturamento extends Fpdf {
 		$this->SetFont("arial","B",10);
 		$this->SetFillColor(200, 200, 200);
 		$this->Cell(50,6,"Total",1,"","C",true);
-		$this->Cell(28,6,$fValorTotal,1,"","C",true);
-		$this->Cell(28,6,$fValorDevidoTotal,1,"","C",true);
-		$this->Cell(28,6,$fValorPagoTotal,1,"","C",true);
-		$this->Cell(28,6,$fJurosTotal,1,"","C",true);
-		$this->Cell(28,6,$fJurosPagoTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fValorTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fValorDevidoTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fValorPagoTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fJurosTotal,1,"","C",true);
+		$this->CellFitScale(28,6,$fJurosPagoTotal,1,"","C",true);
 		$this->Ln(6);
 	}
 
@@ -272,16 +274,16 @@ class RelatorioFaturamento extends Fpdf {
 	private function imprimirBoxFaturamento(): void {
 		$this->SetY($this->GetY() + 10);
 		$this>$this->Cell(0,6,"Faturamento","B");
-		
+
 		$fFaturamentoAtual = "R$ " . number_format($this->fFaturamentoAtual,2,",",".");
 		$fFaturamentoPrevisto = "R$ " . number_format($this->fFaturamentoPrevisto,2,",",".");
 
 		$this->Ln(10);
 		$this->Cell(30,6,"Atual",1,"","C",true);
-		$this->Cell(30,6,$fFaturamentoAtual,1,"","C",false);
-		
+		$this->CellFitScale(30,6,$fFaturamentoAtual,1,"","C",false);
+
 		$this->Ln(6);
 		$this->Cell(30,6,"Previsto",1,"","C",true);
-		$this->Cell(30,6,$fFaturamentoPrevisto,1,"","C",false);
+		$this->CellFitScale(30,6,$fFaturamentoPrevisto,1,"","C",false);
 	}
 }

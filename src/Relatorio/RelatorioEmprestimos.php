@@ -15,6 +15,8 @@ use MoneyLender\Src\Sistema\Sistema;
  */
 class RelatorioEmprestimos extends Fpdf {
 
+	use pdf_cellfit;
+
 	const EMPRESTIMO_CLIENTE = 1;
 	const EMPRESTIMO_PESSOAL = 2;
 
@@ -173,14 +175,14 @@ class RelatorioEmprestimos extends Fpdf {
 			}
 
 			$this->Cell(25,6,$oEmprestimo->getId(),1,"","C");
-			$this->Cell(50,6,mb_convert_encoding($oEmprestimo->getPessoa()->getNome(),'ISO-8859-1', 'UTF-8'),1,"","C");
+			$this->CellFitScale(50,6,mb_convert_encoding($oEmprestimo->getPessoa()->getNome(),'ISO-8859-1', 'UTF-8'),1,"","C");
 			$this->Cell(28,6,mb_convert_encoding($oEmprestimo->getDescricaoSituacao(),'ISO-8859-1', 'UTF-8'),1,"","C");
 			$this->Cell(30,6,$sParcelas,1,"","C");
-			$this->Cell(30,6,$fValor,1,"","C");
-			$this->Cell(28,6,$fValorDevido,1,"","C");
-			$this->Cell(28,6,$fValorPago,1,"","C");
-			$this->Cell(28,6,"R$ " . number_format($fValorJuros,2,",","."),1,"","C");
-			$this->Cell(28,6,"R$ " . number_format($fValorJurosPago,2,",","."),1,"","C");
+			$this->CellFitScale(30,6,$fValor,1,"","C");
+			$this->CellFitScale(28,6,$fValorDevido,1,"","C");
+			$this->CellFitScale(28,6,$fValorPago,1,"","C");
+			$this->CellFitScale(28,6,"R$ " . number_format($fValorJuros,2,",","."),1,"","C");
+			$this->CellFitScale(28,6,"R$ " . number_format($fValorJurosPago,2,",","."),1,"","C");
 			$this->Ln(6);
 
 			$fValorTotal += $oEmprestimo->getValor();
@@ -193,11 +195,11 @@ class RelatorioEmprestimos extends Fpdf {
 		$this->SetFont("arial","B",10);
 		$this->SetFillColor(200, 200, 200);
 		$this->Cell(133,6,mb_convert_encoding("Total: {$loEmprestimos->count()} Empréstimos",'ISO-8859-1', 'UTF-8'),1,"","C",true);
-		$this->Cell(30,6,"R$ " . number_format($fValorTotal,2,",","."),1,"","C",true);
-		$this->Cell(28,6,"R$ " . number_format($fValorDevidoTotal,2,",","."),1,"","C",true);
-		$this->Cell(28,6,"R$ " . number_format($fValorPagoTotal,2,",","."),1,"","C",true);
-		$this->Cell(28,6,"R$ " . number_format($fJurosTotal,2,",","."),1,"","C",true);
-		$this->Cell(28,6,"R$ " . number_format($fJurosPagoTotal,2,",","."),1,"","C",true);
+		$this->CellFitScale(30,6,"R$ " . number_format($fValorTotal,2,",","."),1,"","C",true);
+		$this->CellFitScale(28,6,"R$ " . number_format($fValorDevidoTotal,2,",","."),1,"","C",true);
+		$this->CellFitScale(28,6,"R$ " . number_format($fValorPagoTotal,2,",","."),1,"","C",true);
+		$this->CellFitScale(28,6,"R$ " . number_format($fJurosTotal,2,",","."),1,"","C",true);
+		$this->CellFitScale(28,6,"R$ " . number_format($fJurosPagoTotal,2,",","."),1,"","C",true);
 		$this->Ln(6);
 	}
 

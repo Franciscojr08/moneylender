@@ -37,7 +37,7 @@ CREATE TABLE emo_emprestimo
 );
 
 ALTER TABLE emo_emprestimo
-    add constraint fk_emo_psa1 foreign key (psa_id) references psa_pessoa (psa_id);
+    add constraint fk_emo_psa1 foreign key (psa_id) references psa_pessoa (psa_id) ON DELETE CASCADE;
 
 CREATE TABLE pra_parcela
 (
