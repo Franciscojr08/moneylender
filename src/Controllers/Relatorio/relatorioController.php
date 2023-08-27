@@ -5,6 +5,7 @@ namespace MoneyLender\Src\Controllers\Relatorio;
 use MoneyLender\Src\Relatorio\ReciboEmprestimo;
 use MoneyLender\Src\Relatorio\RelatorioEmprestimos;
 use MoneyLender\Src\Relatorio\RelatorioFaturamento;
+use MoneyLender\Src\Relatorio\RelatorioPessoas;
 use MoneyLender\Src\Sistema\Sistema;
 
 /**
@@ -69,11 +70,8 @@ class relatorioController {
 			case "rel_emprestimo":
 				$this->gerarRelatorioEmprestimos($aDados);
 				break;
-			case "rel_cliente":
-				$this->gerarRelatorioClientes($aDados);
-				break;
-			case "rel_fornecedor":
-				$this->gerarRelatorioFornecedores($aDados);
+			case "rel_pessoa":
+				$this->gerarRelatorioPessoa($aDados);
 				break;
 			default:
 				throw new \Exception("Tipo de relatório não configurado.");
@@ -131,7 +129,7 @@ class relatorioController {
 	}
 
 	/**
-	 * Gera o relatório de clientes
+	 * Gera o relatório de pessoas
 	 *
 	 * @param array $aDados
 	 * @author Francisco Santos franciscojuniordh@gmail.com
@@ -139,20 +137,10 @@ class relatorioController {
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	private function gerarRelatorioClientes(array $aDados): void {
-	
+	private function gerarRelatorioPessoa(array $aDados): void {
+		$oRelatorioPessoa = new RelatorioPessoas($aDados);
+		$oRelatorioPessoa->gerar($aDados);
+		$oRelatorioPessoa->Output();
 	}
 
-	/**
-	 * Gera o relatório de fornecedores
-	 *
-	 * @param array $aDados
-	 * @author Francisco Santos franciscojuniordh@gmail.com
-	 * @return void
-	 *
-	 * @since 1.0.0 - Definição do versionamento da classe
-	 */
-	private function gerarRelatorioFornecedores(array $aDados): void {
-	
-	}
 }

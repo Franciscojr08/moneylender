@@ -193,4 +193,26 @@ class EmprestimoList extends \SplObjectStorage {
 
 		return $aaEmprestimo;
 	}
+
+	/**
+	 * Retorna o valor total com o juros
+	 *
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return float
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public function getValorTotalComJuros(): float {
+		$fValorTotal = 0.00;
+
+		if ($this->isEmpty()) {
+			return $fValorTotal;
+		}
+
+		foreach ($this as $oEmprestimo) {
+			$fValorTotal += $oEmprestimo->getValorComJuros();
+		}
+
+		return $fValorTotal;
+	}
 }

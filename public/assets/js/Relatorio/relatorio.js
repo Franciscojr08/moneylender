@@ -35,6 +35,8 @@ $(document).ready(function() {
 	});
 
 	changeTipoPessoaRecibo();
+	changeComboPessoaRelatorioPessoa();
+
 	carregarEmprestimoPorCliente();
 	carregarEmprestimoPorFornecedor();
 });
@@ -99,6 +101,23 @@ function carregarEmprestimo(iPsaId) {
 				eSelect.append(`<option selected style="display: none;" value="">Selecione o Empréstimo</option>`);
 				eSelect.after(`<p class="mensagem_error">${json.msg}</p>`);
 			}
+		}
+	});
+}
+
+function changeComboPessoaRelatorioPessoa() {
+	$(".emo_tipo_pessoa").change(function() {
+		const CLIENTE = 1;
+		const PESSOAL = 2;
+		let eInputFornecedor = $("#pessoa_fornecedor");
+		let eInputCliente = $("#pessoa_cliente");
+
+		if (parseInt($(this).val()) === CLIENTE) {
+			eInputFornecedor.hide();
+			eInputCliente.show();
+		} else if (parseInt($(this).val()) === PESSOAL) {
+			eInputFornecedor.show();
+			eInputCliente.hide();
 		}
 	});
 }

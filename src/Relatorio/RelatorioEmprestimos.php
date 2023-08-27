@@ -212,7 +212,7 @@ class RelatorioEmprestimos extends Fpdf {
 	private function imprimirCabecalhoTabela(): void {
 		$this->SetFont("arial","B",10);
 		$this->Ln(10);
-		
+
 		$sPessoa = $this->bFornecedor ? "Fornecedor" : "Cliente";
 		$sReceber = $this->bFornecedor ? "A Pagar": "A Receber";
 		$sRecebido = $this->bFornecedor ? "Pago" : "Recebido";

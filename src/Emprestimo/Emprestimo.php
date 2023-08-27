@@ -823,7 +823,7 @@ class Emprestimo {
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
-	public function atualizaraSituacao(): void {
+	public function atualizarSituacao(): void {
 		$aSituacoes = [
 			SituacaoEmprestimoEnum::PAGO,
 			SituacaoEmprestimoEnum::ATRASADO,
@@ -834,21 +834,23 @@ class Emprestimo {
 			return;
 		}
 
-		$oDataAtual = new \DateTimeImmutable("now");
+		$oDataAtual = (new \DateTimeImmutable("now"))->setTime(0,0,0);
 
 		if ($this->isPagamentoParcelado()) {
 			$loParcelas = $this->getParcelas();
 
 			/** @var Parcela $oParcela */
 			foreach ($loParcelas as $oParcela) {
-				if ($oParcela->getDataPrevisaoPagamento() < $oDataAtual) {
+				$oDataPrevisaoPagamento = $oParcela->getDataPrevisaoPagamento()->setTime(0,0,0);
+				if ($oDataPrevisaoPagamento < $oDataAtual) {
 					$this->iSituacao = SituacaoEmprestimoEnum::ATRASADO;
 					$this->atualizar();
 					break;
 				}
 			}
 		} else {
-			if ($this->oDataPrevisaoPagamento < $oDataAtual) {
+			$oDataPrevisao = $this->oDataPrevisaoPagamento->setTime(0,0,0);
+			if ($oDataPrevisao < $oDataAtual) {
 				$this->iSituacao = SituacaoEmprestimoEnum::ATRASADO;
 				$this->atualizar();
 			}

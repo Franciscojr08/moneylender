@@ -427,7 +427,7 @@ class emprestimoController {
 
 		/** @var Emprestimo $oEmprestimo */
 		foreach ($loEmprestimo as $oEmprestimo) {
-			$oEmprestimo->atualizaraSituacao();
+			$oEmprestimo->atualizarSituacao();
 		}
 	}
 }

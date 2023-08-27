@@ -43,12 +43,8 @@ use MoneyLender\Src\Pessoa\PessoaList;
 		<input type="radio" data-target="filtro_emprestimo"  id="emprestimos" name="rel_tipo" value="rel_emprestimo" class="rel_tipo">
 		<label for="emprestimos" style="color: #fff; margin-bottom: 8px">Empréstimos</label><br>
 
-		<input type="radio" data-target="filtro_clientes" id="clientes" name="rel_tipo" value="rel_cliente" class="rel_tipo">
-		<label for="clientes" style="color: #fff; margin-bottom: 8px">Clientes</label><br>
-
-		<input type="radio" data-target="filtro_fornecedores" id="fornecedores" name="rel_tipo" value="rel_fornecedor" class="rel_tipo">
-		<label for="fornecedores" style="color: #fff;">Fornecedores</label><br>
-
+		<input type="radio" data-target="filtro_pessoa" id="clientes" name="rel_tipo" value="rel_pessoa" class="rel_tipo">
+		<label for="clientes" style="color: #fff; margin-bottom: 8px">Clientes/Fornecedores</label><br>
 	</div>
 
 	<div class="cad_emp_data">
@@ -66,14 +62,16 @@ use MoneyLender\Src\Pessoa\PessoaList;
 				<?php require_once "Relatorio/include/filtro_emprestimo.php"; ?>
 			</div>
 
-			<?php require_once "Relatorio/include/filtro_pessoa.php"; ?>
+			<div id="filtro_pessoa" style="display:none;" class="div_filtro">
+				<?php require_once "Relatorio/include/filtro_pessoa.php"; ?>
+			</div>
 
 			<div id="not_filtro" style="display: none" class="div_filtro">
 				<?php Functions::addImage("not_img","png",""); ?>
 				<br>
 				<span>Este modelo de relatório não possui filtros disponíveis.</span>
 			</div>
-			
+
 			<div style="display: flex; justify-content: center" class="btn_cad_emp">
 				<button type="submit">Gerar</button>
 			</div>
