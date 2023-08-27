@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	const RECIBO = "rel_recibo";
+
 	$(document).ajaxStart(function() {
 		$(".toggle_spinner").show();
 	});
@@ -8,11 +10,28 @@ $(document).ready(function() {
 	});
 
 	$(".rel_tipo").change(function() {
-		let iTipoRelatorio = $(this).val();
+		let sTipoRelatorio = $(this).val();
 
 		$(".div_filtro").hide();
 		$(`#${$(this).data("target")}`).show();
-		$(".tipo_relatorio").val(iTipoRelatorio);
+		$(".tipo_relatorio").val(sTipoRelatorio);
+
+		if (sTipoRelatorio != RECIBO) {
+			$("#recibo_fornecedor").find("select").attr('required', false);
+			$("#recibo_cliente").find("select").attr('required', false);
+			$("#filtro_recibo_emprestimo").attr('required', false);
+		} else {
+			$("#filtro_recibo_cliente").attr("checked",true);
+			$(".mensagem_error").remove();
+
+			let eSelect = $("#filtro_recibo_emprestimo");
+			eSelect.empty();
+			eSelect.append(`<option selected style="display: none;" value="">Selecione o Empréstimo</option>`)
+			eSelect.attr('required', true);
+
+			$("#recibo_fornecedor").hide().find("select").attr('required', false);
+			$("#recibo_cliente").show().find("select").attr('required', true);
+		}
 	});
 
 	changeTipoPessoaRecibo();

@@ -20,7 +20,7 @@ class RelatorioFaturamento extends Fpdf {
 	/**
 	 * RelatorioFaturamento Construtor
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -39,7 +39,7 @@ class RelatorioFaturamento extends Fpdf {
 	/**
 	 * Gera o relatório
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -55,7 +55,7 @@ class RelatorioFaturamento extends Fpdf {
 	/**
 	 * Imprime o título do relatório
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe
@@ -68,7 +68,7 @@ class RelatorioFaturamento extends Fpdf {
 	/**
 	 * Imprime as informações dos empréstimos dos clientes
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -144,7 +144,7 @@ class RelatorioFaturamento extends Fpdf {
 	/**
 	 * Imprime as informações dos empréstimos dos fornecedores
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 * @throws \Exception
 	 *
@@ -222,7 +222,7 @@ class RelatorioFaturamento extends Fpdf {
 	 * Retorna os dados dos empréstimos das pessoas
 	 *
 	 * @param bool $bFiltrarFornecedor
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return array
 	 * @throws \Exception
 	 *
@@ -264,7 +264,7 @@ class RelatorioFaturamento extends Fpdf {
 	/**
 	 * Imprime o box de faturamento
 	 *
-	 * @author Francisco Santos franciscosantos@moobitech.com.br
+	 * @author Francisco Santos franciscojuniordh@gmail.com
 	 * @return void
 	 *
 	 * @since 1.0.0 - Definição do versionamento da classe

@@ -69,4 +69,25 @@ enum SituacaoEmprestimoEnum implements EnumInterface {
 			default => throw new Exception("Tipo de arquivo não encontrado.")
 		};
 	}
+
+	/**
+	 * Retorna as descrições das situações do empréstimo conforme o array de id do enum
+	 *
+	 * @param array $aIds
+	 * @author Francisco Santos franciscojuniordh@gmail.com
+	 * @return string
+	 * @throws Exception
+	 *
+	 * @since 1.0.0 - Definição do versionamento da classe
+	 */
+	public static function getDescricaoByIds(array $aIds): string {
+		$aSituacao = [];
+
+		foreach ($aIds as $iId) {
+			$sDescricaoSituacao = self::getDescricaoById($iId);
+			$aSituacao[] = $sDescricaoSituacao;
+		}
+
+		return implode(", ",$aSituacao);
+	}
 }
