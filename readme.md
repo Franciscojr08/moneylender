@@ -26,6 +26,12 @@
 
 ## 🐳 Executando com Docker
 
+Antes de iniciar, certifique-se de ter o Docker instalado no seu sistema. Veja os tutoriais oficiais:
+
+- [Docker no Windows](https://docs.docker.com/desktop/install/windows-install/)
+- [Docker no Linux](https://docs.docker.com/engine/install/)
+- [Docker no Mac](https://docs.docker.com/desktop/install/mac-install/)
+
 ```bash
 # Clone o repositório
 git clone https://github.com/Franciscojr08/moneylender.git
