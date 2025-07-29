@@ -47,7 +47,7 @@ class Router {
 			}
 
 			$oController->$sAcao($this->aDados);
-		} catch (\Exception $oExp) {
+		} catch (\Throwable $oExp) {
 			$oErroController = new errorController();
 			$oErroController->errorExeption($oExp->getMessage());
 
