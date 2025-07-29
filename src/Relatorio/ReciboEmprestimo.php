@@ -93,14 +93,17 @@ class ReciboEmprestimo extends Fpdf {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	private function getTextoRecibo(): string {
+		$sNomeFiador = $_ENV['NOME_FIADOR'];
+		$sCPFFiador = $_ENV['CPF_FIADOR'];
+
 		$fValorEmprestimo = number_format($this->oEmprestimo->getValorComJuros(),2,",",".");
 		$sDataEmprestimo = $this->oEmprestimo->getDataEmprestimo()->format("d/m/Y");
 
 		if ($this->oPessoa->isCliente()) {
 			$sTexto = "Eu, {$this->oPessoa->getNome()}, inscrito(a) no CPF sob o nº {$this->oPessoa->getCPFComMascara()}";
-			$sTexto .= " tomei emprestado junto a Matheus Silva Pereira, inscrito no CPF sob o nº 045.355.655-50, a";
+			$sTexto .= " tomei emprestado junto a $sNomeFiador, inscrito no CPF sob o nº $sCPFFiador, a";
 		} else {
-			$sTexto = "Eu, Matheus Silva Pereira, inscrito no CPF sob o nº 045.355.655-50, tomei emprestado junto a";
+			$sTexto = "Eu, $sNomeFiador, inscrito no CPF sob o nº $sCPFFiador, tomei emprestado junto a";
 			$sTexto .= " {$this->oPessoa->getNome()}, inscrito(a) no CPF sob o nº {$this->oPessoa->getCPFComMascara()}, a";
 		}
 
@@ -193,13 +196,16 @@ class ReciboEmprestimo extends Fpdf {
 	 * @since 1.0.0 - Definição do versionamento da classe
 	 */
 	private function imprimirRodape(): void {
+		$sFiador = $_ENV['NOME_FIADOR'];
+		$sCidade = $_ENV['CIDADE'];
+
 		$this->Image("public/assets/img/assinatura.png",100,$this->GetY() + 15,10);
 		$this->SetXY(80,$this->GetY() + 8);
-		$this->Cell(50,6,"Manaus - AM, {$this->getDataAtualExtenso()}","",1,"C");
+		$this->Cell(50,6,"$sCidade, {$this->getDataAtualExtenso()}","",1,"C");
 		
 		$this->SetFont("arial","B",10);
 		$this->SetXY(80,$this->GetY() + 15);
-		$this->Cell(50,6,"Matheus Sila Pereira","T","1","C");
+		$this->Cell(50,6,$sFiador,"T","1","C");
 
 		$sDescricaoTipo = $this->oPessoa->isCliente() ? "Credor" : "Devedor";
 		$this->SetX(80);

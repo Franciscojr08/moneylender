@@ -1,4 +1,4 @@
-CREATE TABLE psa_pessoa
+CREATE TABLE IF NOT EXISTS psa_pessoa
 (
     psa_id               SMALLINT unsigned PRIMARY KEY auto_increment,
     psa_nome             VARCHAR(100) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE psa_pessoa
     psa_data_atualizacao DATE         NULL
 );
 
-CREATE TABLE emo_emprestimo
+CREATE TABLE IF NOT EXISTS emo_emprestimo
 (
     emo_id                      SMALLINT unsigned PRIMARY KEY auto_increment,
     psa_id                      SMALLINT unsigned not null,
@@ -39,7 +39,7 @@ CREATE TABLE emo_emprestimo
 ALTER TABLE emo_emprestimo
     add constraint fk_emo_psa1 foreign key (psa_id) references psa_pessoa (psa_id) ON DELETE CASCADE;
 
-CREATE TABLE pra_parcela
+CREATE TABLE IF NOT EXISTS pra_parcela
 (
     pra_id                      SMALLINT unsigned PRIMARY KEY auto_increment,
     emo_id                      SMALLINT unsigned NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE pra_parcela
 ALTER TABLE pra_parcela
     ADD CONSTRAINT fk_pra_emo1 FOREIGN KEY (emo_id) REFERENCES emo_emprestimo (emo_id);
 
-CREATE TABLE pgo_pagamento
+CREATE TABLE IF NOT EXISTS pgo_pagamento
 (
     pgo_id              SMALLINT unsigned PRIMARY KEY auto_increment,
     pgo_valor           DECIMAL(11, 2) NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE pgo_pagamento
     pgo_data_pagamento  DATE           NOT NULL
 );
 
-CREATE TABLE pgm_pagamento_emprestimo
+CREATE TABLE IF NOT EXISTS pgm_pagamento_emprestimo
 (
     pgm_id SMALLINT unsigned PRIMARY KEY auto_increment,
     pgo_id SMALLINT unsigned NOT NULL,
